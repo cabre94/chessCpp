@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Boards/Board.h"
 #include "Pieces/Piece.h"
 #include "Pieces/Utils.h"
 #include "Positions/Position.h"
