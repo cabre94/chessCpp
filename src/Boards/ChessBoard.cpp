@@ -119,11 +119,14 @@ std::set<Position> ChessBoard::getParallelMoves(const Position &pos,
     uint32_t rr = pos[1];
     uint32_t cc = pos[0];
 
+    int32_t dc, dr;
+    uint32_t c, r;
     for (const auto &dir : directions) {
-        int32_t dc = dir[0], dr = dir[1];
+        dc = dir[0];
+        dr = dir[1];
 
-        uint32_t c = cc + dc;
-        uint32_t r = rr + dr;
+        c = cc + dc;
+        r = rr + dr;
 
         while (validIdxs(r, c)) {
             // Check if there is a piece on position of idxs (r,c)
@@ -161,11 +164,14 @@ std::set<Position> ChessBoard::getDiagonalMoves(const Position &pos,
     uint32_t rr = pos[1];
     uint32_t cc = pos[0];
 
+    int32_t dc, dr;
+    uint32_t c, r;
     for (const auto &dir : directions) {
-        int32_t dc = dir[0], dr = dir[1];
+        dc = dir[0];
+        dr = dir[1];
 
-        uint32_t c = cc + dc;
-        uint32_t r = rr + dr;
+        c = cc + dc;
+        r = rr + dr;
 
         while (validIdxs(r, c)) {
             // Check if there is a piece on position of idxs (r,c)
@@ -207,11 +213,14 @@ std::set<chess::Position> ChessBoard::getLShapeMoves(const Position &pos, const 
                                                       {-dcc, drr},  {drr, -dcc}, {dcc, -drr},
                                                       {-drr, -dcc}, {-dcc, -drr}};
 
+    int32_t dc, dr;
+    uint32_t c, r;
     for (const auto &dir : directions) {
-        int32_t dc = dir[0], dr = dir[1];
+        dc = dir[0];
+        dr = dir[1];
 
-        uint32_t c = cc + dc;
-        uint32_t r = rr + dr;
+        c = cc + dc;
+        r = rr + dr;
 
         if (validIdxs(r, c)) {
             if (pieces[r][c] == nullptr || pieces[r][c]->getPlayerID() != player_id)
@@ -223,7 +232,7 @@ std::set<chess::Position> ChessBoard::getLShapeMoves(const Position &pos, const 
 }
 
 std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const PlayerID player_id,
-                                                std::vector<int16_t> forward_dir,
+                                                const std::vector<int16_t> &forward_dir,
                                                 bool first) const {
 
     std::set<chess::Position> moves;
@@ -240,9 +249,10 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
 
     // Forward movement (no capture)
     uint32_t max_steps = first ? 2 : 1;
+    uint32_t r, c;
     for (uint32_t step = 1; step <= max_steps; ++step) {
-        uint32_t r = rr + step * dr;
-        uint32_t c = cc + step * dc;
+        r = rr + step * dr;
+        c = cc + step * dc;
 
         if (!validIdxs(r, c) || pieces[r][c] != nullptr) {
             break; // Cant move forward
@@ -255,8 +265,8 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
     constexpr int32_t diagonal_offsets[2] = {-1, 1}; // Relative diagonal movements
 
     for (const int32_t &offset : diagonal_offsets) {
-        int32_t r = rr + dr;
-        int32_t c = cc + offset; // Move to the left or right
+        r = rr + dr;
+        c = cc + offset; // Move to the left or right
 
         if (validIdxs(r, c) && pieces[r][c] != nullptr) {
             if (pieces[r][c]->getPlayerID() != player_id)
@@ -265,6 +275,34 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
     }
 
     // TODO: Might have to complex logic if forward direction is on diagonal
+
+    return moves;
+}
+
+std::set<Position> ChessBoard::getOneStepMoves(const Position &pos,
+                                               const PlayerID player_id) const {
+
+    std::set<chess::Position> moves;
+
+    // Get row and column of current position
+    uint32_t rr = pos[1];
+    uint32_t cc = pos[0];
+
+    uint32_t c, r;
+    for (int32_t dc = -1; dc <= 1; ++dc) {
+        for (int32_t dr = -1; dr <= 1; ++dr) {
+            if (dc == 0 && dr == 0)
+                continue;
+
+            c = cc + dc;
+            r = rr + dr;
+
+            if (validIdxs(r, c)) {
+                if (pieces[r][c] == nullptr || pieces[r][c]->getPlayerID() != player_id)
+                    moves.insert(chess::Position(r, c));
+            }
+        }
+    }
 
     return moves;
 }
