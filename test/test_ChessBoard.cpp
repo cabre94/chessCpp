@@ -157,6 +157,26 @@ expectedForwardMovesEmptyBoard(uint32_t r, uint32_t c, const std::vector<int16_t
     return exp_set;
 }
 
+static std::set<chess::Position> expectedKingMovesEmptyBoard(uint32_t r, uint32_t c) {
+    std::set<chess::Position> exp_set;
+
+    // Iteramos sobre todas las direcciones posibles (una casilla a la vez)
+    for (int32_t dr = -1; dr <= 1; ++dr) {
+        for (int32_t dc = -1; dc <= 1; ++dc) {
+            if (dr == 0 && dc == 0)
+                continue; // No incluimos la posición actual
+            int32_t new_r = static_cast<int32_t>(r) + dr;
+            int32_t new_c = static_cast<int32_t>(c) + dc;
+            if (new_r >= 0 && new_r < static_cast<int32_t>(chess::ChessBoard::N_ROW) &&
+                new_c >= 0 && new_c < static_cast<int32_t>(chess::ChessBoard::N_COL)) {
+                exp_set.insert(chess::Position(new_r, new_c));
+            }
+        }
+    }
+
+    return exp_set;
+}
+
 static std::set<chess::Position> getExpectedMovesOnNewBoard(uint32_t r, uint32_t c) {
     std::set<chess::Position> moves;
 
@@ -293,6 +313,29 @@ TEST(ChessBoard, getFordwardMoves) {
                         << "Error en posición (" << r << ", " << c << ")";
                 }
             }
+        }
+    }
+}
+
+TEST(ChessBoard, getOneStepMoves) {
+    chess::ChessBoard board;
+
+    std::set<chess::Position> moves, expected_moves;
+    chess::Position pos(0, 0);
+
+    for (uint32_t r = 0; r < chess::ChessBoard::N_ROW; r++) {
+        for (uint32_t c = 0; c < chess::ChessBoard::N_COL; c++) {
+            // Get expected set of valid moves for this position
+            expected_moves = expectedKingMovesEmptyBoard(r, c);
+
+            // Create current position
+            pos = chess::Position(r, c);
+
+            // Get moves from board
+            moves = board.getOneStepMoves(pos, chess::WHITE);
+
+            // printSetPositions(pos, moves);
+            EXPECT_EQ(moves, expected_moves) << "Error en posición (" << r << ", " << c << ")";
         }
     }
 }
