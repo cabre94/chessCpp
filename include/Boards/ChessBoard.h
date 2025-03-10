@@ -11,21 +11,10 @@ namespace chess {
 
 class ChessBoard : public Board {
 public:
-    // ChessBoard(uint16_t nRow_, uint16_t nCol_);
     ChessBoard();
     ~ChessBoard();
 
-    // Funciones virtuales
     void printBoard() const override;
-    // void printPositions();
-    // void printPosAndPieces() const override;
-
-    // bool makeMove(Position from, Position to) override;
-
-    // void createPices(const char c = 'n') override;
-
-    // TODO sacar
-    // std::set<Position> getValidMoves(Position pos) const override; // TODO Sacar esto
 
     std::set<Position> getParallelMoves(const Position &pos,
                                         const PlayerID player_id) const override;
