@@ -14,7 +14,7 @@ public:
                 (player_id_ == WHITE) ? QUEEN_WHITE_SYMBOL : QUEEN_BLACK_SYMBOL, pos_) {}
     ~Queen() {}
 
-    std::set<Position> getPossibleMoves(const Board *board) const override {
+    std::set<Position> getPossibleMoves(const Board *board) override {
         (void) board;
         std::set<Position> validMoves;
         // validMoves = board->getValidMoves(from, QUEEN); // TODO
