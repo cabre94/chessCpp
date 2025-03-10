@@ -1,4 +1,5 @@
 #include "Boards/ChessBoard.h"
+#include "Boards/Utils.h"
 #include "Pieces/Bishop.h"
 #include "Pieces/Champion.h"
 #include "Pieces/King.h"
@@ -50,57 +51,52 @@ ChessBoard::~ChessBoard() {
 void ChessBoard::printBoard() const {
     Piece *piece;
 
-    // TODO fix to use nRow and Ncol
-    // TODO En toda la funcion los indices quedaron mezclados
+    // Row with letters indicating columns
     std::cout << "  ";
     for (char c = 'A'; c <= 'H'; ++c)
         std::cout << " " << c << "  ";
     std::cout << std::endl;
 
-    // ! Primera linea
-    std::cout << " \u250C";
-    for (int i = N_COL; i > 1; i--) {
-        std::cout << "\u2500\u2500\u2500\u252C";
-    }
-    std::cout << "\u2500\u2500\u2500\u2510" << std::endl;
+    // First line
+    std::cout << " " << TOP_LEFT;
+    for (uint32_t i = 0; i < N_COL - 1; ++i)
+        std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << TOP_T;
+    std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << TOP_RIGHT << std::endl;
 
-    // ! Ahora las piezas
-    for (uint32_t row = N_ROW; row >= 1; --row) {
-        std::cout << row << "\u2502";
+    // Pieces
+    for (uint32_t r = N_ROW; r >= 1; --r) {
+        std::cout << r << VERTICAL;
 
-        for (uint32_t j = 0; j < N_COL; ++j) {
-            // piece = getPieceFromIdx(row - 1, j);
-            piece = pieces[row - 1][j];
+        for (uint32_t c = 0; c < N_COL; ++c) {
+            piece = pieces[r - 1][c];
 
             if (piece == nullptr)
-                std::cout << "   \u2502";
-            else {
-                std::cout << " ";
-                std::cout << *piece;
-                // piece->printPiece();
-                std::cout << " ";
-                std::cout << "\u2502";
-            }
+                std::cout << "   " << VERTICAL;
+            else
+                std::cout << " " << *piece << " " << VERTICAL;
         }
-        std::cout << std::endl;
+        std::cout << r << std::endl;
 
         // print the grid lines
-        if (row > 1) {
-            std::cout << " \u251C";
-            for (int i = N_COL; i > 1; i--) {
-                std::cout << "\u2500\u2500\u2500\u253C";
-            }
-            std::cout << "\u2500\u2500\u2500\u2524" << std::endl;
+        if (r > 1) {
+            std::cout << " " << LEFT_T;
+            for (uint32_t i = 0; i < N_COL - 1; ++i)
+                std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << CENTER;
+            std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << RIGHT_T << std::endl;
         }
     }
 
-    // ! Uktima linea
-    // print bottom
-    std::cout << " \u2514";
-    for (int i = 7; i >= 1; i--) {
-        std::cout << "\u2500\u2500\u2500\u2534";
-    }
-    std::cout << "\u2500\u2500\u2500\u2518" << std::endl;
+    // Last line
+    std::cout << " " << BOTTOM_LEFT;
+    for (uint32_t i = 0; i < N_COL - 1; ++i)
+        std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << BOTTOM_T;
+    std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << BOTTOM_RIGHT << std::endl;
+
+    // Row with letters indicating columns
+    std::cout << "  ";
+    for (char c = 'A'; c <= 'H'; ++c)
+        std::cout << " " << c << "  ";
+    std::cout << std::endl;
 }
 
 std::set<Position> ChessBoard::getParallelMoves(const Position &pos,

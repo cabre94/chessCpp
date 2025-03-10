@@ -390,3 +390,10 @@ TEST(ChessBoard, InitializePiecesTest) {
         }
     }
 }
+
+TEST(ChessBoard, printBoard) {
+    TestChessBoard board;
+    board.testInitializePieces(); // initialize pieces
+
+    board.printBoard();
+}
