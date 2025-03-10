@@ -15,10 +15,11 @@ public:
     ~Rook() {}
 
     std::set<Position> getPossibleMoves(const Board *board) override {
-        (void) board;
-        std::set<Position> validMoves;
-        // validMoves = board->getValidMoves(from, ROOK); // TODO
-        return validMoves;
+        // (void) board;
+        // std::set<Position> validMoves;
+        // // validMoves = board->getValidMoves(from, ROOK); // TODO
+        // return validMoves;
+        return board->getParallelMoves(pos, player_id);
     }
 };
 
