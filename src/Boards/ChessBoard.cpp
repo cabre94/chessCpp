@@ -1,4 +1,5 @@
 #include "Boards/ChessBoard.h"
+#include "Boards/Utils.h"
 #include "Pieces/Bishop.h"
 #include "Pieces/Champion.h"
 #include "Pieces/King.h"
@@ -57,40 +58,39 @@ void ChessBoard::printBoard() const {
     std::cout << std::endl;
 
     // First line
-    std::cout << " \u250C";
-    for (int i = N_COL; i > 1; i--) {
-        std::cout << "\u2500\u2500\u2500\u252C";
-    }
-    std::cout << "\u2500\u2500\u2500\u2510" << std::endl;
+    std::cout << " " << TOP_LEFT;
+    for (uint32_t i = 0; i < N_COL - 1; ++i)
+        std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << TOP_T;
+    std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << TOP_RIGHT << std::endl;
 
-    // ! Ahora las piezas
+    // Pieces
     for (uint32_t r = N_ROW; r >= 1; --r) {
-        std::cout << r << "\u2502";
+        std::cout << r << VERTICAL;
 
         for (uint32_t c = 0; c < N_COL; ++c) {
             piece = pieces[r - 1][c];
 
             if (piece == nullptr)
-                std::cout << "   \u2502";
+                std::cout << "   " << VERTICAL;
             else
-                std::cout << " " << *piece << " " << "\u2502";
+                std::cout << " " << *piece << " " << VERTICAL;
         }
         std::cout << r << std::endl;
 
         // print the grid lines
         if (r > 1) {
-            std::cout << " \u251C";
-            for (int i = N_COL; i > 1; i--)
-                std::cout << "\u2500\u2500\u2500\u253C";
-            std::cout << "\u2500\u2500\u2500\u2524" << std::endl;
+            std::cout << " " << LEFT_T;
+            for (uint32_t i = 0; i < N_COL - 1; ++i)
+                std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << CENTER;
+            std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << RIGHT_T << std::endl;
         }
     }
 
     // Last line
-    std::cout << " \u2514";
-    for (int i = 7; i >= 1; i--)
-        std::cout << "\u2500\u2500\u2500\u2534";
-    std::cout << "\u2500\u2500\u2500\u2518" << std::endl;
+    std::cout << " " << BOTTOM_LEFT;
+    for (uint32_t i = 0; i < N_COL - 1; ++i)
+        std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << BOTTOM_T;
+    std::cout << HORIZONTAL << HORIZONTAL << HORIZONTAL << BOTTOM_RIGHT << std::endl;
 
     // Row with letters indicating columns
     std::cout << "  ";
