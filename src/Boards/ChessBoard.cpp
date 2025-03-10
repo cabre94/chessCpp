@@ -68,18 +68,12 @@ void ChessBoard::printBoard() const {
         std::cout << r << "\u2502";
 
         for (uint32_t c = 0; c < N_COL; ++c) {
-            // piece = getPieceFromIdx(row - 1, c);
             piece = pieces[r - 1][c];
 
             if (piece == nullptr)
                 std::cout << "   \u2502";
-            else {
-                std::cout << " ";
-                std::cout << *piece;
-                // piece->printPiece();
-                std::cout << " ";
-                std::cout << "\u2502";
-            }
+            else
+                std::cout << " " << *piece << " " << "\u2502";
         }
         std::cout << r << std::endl;
 
@@ -92,8 +86,7 @@ void ChessBoard::printBoard() const {
         }
     }
 
-    // ! Uktima linea
-    // print bottom
+    // Last line
     std::cout << " \u2514";
     for (int i = 7; i >= 1; i--)
         std::cout << "\u2500\u2500\u2500\u2534";
