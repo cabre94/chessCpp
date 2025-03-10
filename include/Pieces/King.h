@@ -15,10 +15,11 @@ public:
     ~King() {}
 
     std::set<Position> getPossibleMoves(const Board *board) const override {
-        (void) board;
-        std::set<Position> validMoves;
-        // validMoves = board->getValidMoves(pos, KING); // TODO
-        return validMoves;
+        // (void) board;
+        // std::set<Position> validMoves;
+        // // validMoves = board->getValidMoves(pos, KING); // TODO
+        // return validMoves;
+        return board->getOneStepMoves(pos, player_id);
     }
 };
 
