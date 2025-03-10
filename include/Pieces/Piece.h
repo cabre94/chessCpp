@@ -18,8 +18,8 @@ enum State { CHECK, CHECKMATE, NORMAL }; // TODO
 
 class Piece {
 public:
-    Piece(PlayerID player_id_, std::string name_, Position pos_)
-        : player_id(player_id_), name(name_), pos(pos_) {}
+    Piece(PlayerID player_id_, std::string name_, std::string symbol_, Position pos_)
+        : player_id(player_id_), name(name_), symbol(symbol_), pos(pos_) {}
     virtual ~Piece() {}
 
     Piece(const Piece &) = delete;            // Copy constructor
@@ -31,12 +31,17 @@ public:
     std::string getName() const { return name; };
     Position getPosition() const { return pos; }
 
-    virtual std::set<Position> getPossibleMoves(const Board *board) const = 0;
-    virtual void printPiece() const = 0;
+    virtual std::set<Position> getPossibleMoves(const Board *board) = 0;
+
+    friend std::ostream &operator<<(std::ostream &os, const Piece &piece) {
+        os << piece.symbol;
+        return os;
+    }
 
 protected:
     const PlayerID player_id;
-    std::string name;
+    const std::string name;
+    const std::string symbol;
     Position pos;
 };
 

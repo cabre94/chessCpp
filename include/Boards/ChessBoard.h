@@ -34,8 +34,10 @@ public:
     std::set<Position> getLShapeMoves(const Position &pos, const PlayerID player_id,
                                       const std::vector<uint16_t> &deltas) const override;
     std::set<Position> getFordwardMoves(const Position &pos, const PlayerID player_id,
-                                        std::vector<int16_t> forward_dir,
+                                        const std::vector<int16_t> &forward_dir,
                                         bool first = false) const override;
+    std::set<Position> getOneStepMoves(const Position &pos,
+                                       const PlayerID player_id) const override;
     std::set<Position> getAllDirectionMoves(const Position &pos,
                                             const PlayerID player_id) const override;
 

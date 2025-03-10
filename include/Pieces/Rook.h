@@ -1,16 +1,26 @@
 #pragma once
 
+#include "Boards/Board.h"
 #include "Pieces/Piece.h"
+#include "Pieces/Utils.h"
+#include "Positions/Position.h"
 
 namespace chess {
 
 class Rook : public Piece {
 public:
-    Rook(PlayerID player_id_, Position pos_) : Piece(player_id_, "ROOK", pos_) {}
+    Rook(PlayerID player_id_, Position pos_)
+        : Piece(player_id_, ROOK_NAME,
+                (player_id_ == WHITE) ? ROOK_WHITE_SYMBOL : ROOK_BLACK_SYMBOL, pos_) {}
     ~Rook() {}
 
-    void printPiece() const override;
-    std::set<Position> getPossibleMoves(const Board *board) const override;
+    std::set<Position> getPossibleMoves(const Board *board) override {
+        // (void) board;
+        // std::set<Position> validMoves;
+        // // validMoves = board->getValidMoves(from, ROOK); // TODO
+        // return validMoves;
+        return board->getParallelMoves(pos, player_id);
+    }
 };
 
 } // namespace chess

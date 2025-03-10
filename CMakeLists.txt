@@ -22,14 +22,15 @@ set(SOURCES
 	${CMAKE_SOURCE_DIR}/src/ChessGame.cpp
 	${CMAKE_SOURCE_DIR}/src/Boards/Board.cpp
 	${CMAKE_SOURCE_DIR}/src/Boards/ChessBoard.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Bishop.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Champion.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/King.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Knight.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Magician.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Pawn.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Queen.cpp
-	${CMAKE_SOURCE_DIR}/src/Pieces/Rook.cpp
+
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Bishop.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Champion.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/King.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Knight.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Magician.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Pawn.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Queen.cpp
+	# ${CMAKE_SOURCE_DIR}/src/Pieces/Rook.cpp
 	${CMAKE_SOURCE_DIR}/src/Players/Player.cpp
 	${CMAKE_SOURCE_DIR}/src/Players/RealPlayer.cpp
 	${CMAKE_SOURCE_DIR}/src/Positions/Position.cpp
