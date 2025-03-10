@@ -7,6 +7,7 @@
 
 #include "Boards/ChessBoard.h"
 #include "Pieces/Piece.h"
+#include "Pieces/Utils.h"
 #include "Positions/Position.h"
 
 class TestChessBoard : public chess::ChessBoard {
@@ -177,10 +178,9 @@ static std::set<chess::Position> expectedKingMovesEmptyBoard(uint32_t r, uint32_
     return exp_set;
 }
 
-static std::set<chess::Position> getExpectedMovesOnNewBoard(uint32_t r, uint32_t c) {
+static std::set<chess::Position> getExpMovesOnNewBoard(uint32_t r, uint32_t c) {
     std::set<chess::Position> moves;
 
-    // Pawns
     if (r == 1) { // White pawns
         moves.insert({2, c});
         moves.insert({3, c});
@@ -189,16 +189,16 @@ static std::set<chess::Position> getExpectedMovesOnNewBoard(uint32_t r, uint32_t
         moves.insert({4, c});
     }
 
-    // Knights
-    if ((r == 0 || r == 7) && (c == 1 || c == 6)) {
-        std::vector<chess::Position> possibleMoves = {
-            {r + 2, c + 1}, {r + 2, c - 1}, {r - 2, c + 1}, {r - 2, c - 1},
-            {r + 1, c + 2}, {r + 1, c - 2}, {r - 1, c + 2}, {r - 1, c - 2}};
+    std::vector<chess::Position> possibleMoves;
+    if ((r == 0) && (c == 1 || c == 6)) { // White Knights
+        possibleMoves = {{r + 2, c + 1}, {r + 2, c - 1}};
+    } else if ((r == 7) && (c == 1 || c == 6)) { // Black Knights
+        possibleMoves = {{r - 2, c + 1}, {r - 2, c - 1}};
+    }
 
-        for (const auto &pos : possibleMoves) {
-            if (pos[0] < chess::ChessBoard::N_COL && pos[1] < chess::ChessBoard::N_ROW) {
-                moves.insert(pos);
-            }
+    for (const auto &pos : possibleMoves) {
+        if (pos[0] < chess::ChessBoard::N_COL && pos[1] < chess::ChessBoard::N_ROW) {
+            moves.insert(pos);
         }
     }
 
@@ -364,53 +364,29 @@ TEST(ChessBoard, getAllDirectionMoves) {
 }
 
 TEST(ChessBoard, InitializePiecesTest) {
+    chess::PlayerID exp_player_id = chess::WHITE;
+    std::string exp_names[] = {chess::ROOK_NAME,   chess::KNIGHT_NAME, chess::BISHOP_NAME,
+                               chess::QUEEN_NAME,  chess::KING_NAME,   chess::BISHOP_NAME,
+                               chess::KNIGHT_NAME, chess::ROOK_NAME};
+
     TestChessBoard board;
     board.testInitializePieces(); // initialize pieces
 
     // Pawns
-    for (uint32_t c = 0; c < chess::ChessBoard::N_COL; ++c) {
-        EXPECT_EQ(board.getPiece(1, c)->getPlayerID(), chess::WHITE);
-        EXPECT_EQ(board.getPiece(1, c)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(1, c));
+    for (uint32_t r : {0, 1, 6, 7}) {
+        if (r == 6)
+            exp_player_id = chess::BLACK;
 
-        EXPECT_EQ(board.getPiece(6, c)->getPlayerID(), chess::BLACK);
-        EXPECT_EQ(board.getPiece(6, c)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(6, c));
+        for (uint32_t c = 0; c < chess::ChessBoard::N_COL; ++c) {
+            EXPECT_EQ(board.getPiece(r, c)->getPlayerID(), exp_player_id);
+            EXPECT_EQ(board.getPiece(r, c)->getPosition(), chess::Position(r, c));
+            EXPECT_EQ(board.getPiece(r, c)->getPossibleMoves(&board), getExpMovesOnNewBoard(r, c));
+
+            if (r == 0 || r == 7) {
+                EXPECT_EQ(board.getPiece(r, c)->getName(), exp_names[c]);
+            } else { // row of pawns
+                EXPECT_EQ(board.getPiece(r, c)->getName(), chess::PAWN_NAME);
+            }
+        }
     }
-
-    // White pieces
-    EXPECT_EQ(board.getPiece(0, 0)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 1)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 2)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 3)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 4)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 5)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 6)->getPlayerID(), chess::WHITE);
-    EXPECT_EQ(board.getPiece(0, 7)->getPlayerID(), chess::WHITE);
-
-    EXPECT_EQ(board.getPiece(0, 0)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 0));
-    EXPECT_EQ(board.getPiece(0, 1)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 1));
-    EXPECT_EQ(board.getPiece(0, 2)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 2));
-    EXPECT_EQ(board.getPiece(0, 3)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 3));
-    EXPECT_EQ(board.getPiece(0, 4)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 4));
-    EXPECT_EQ(board.getPiece(0, 5)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 5));
-    EXPECT_EQ(board.getPiece(0, 6)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 6));
-    EXPECT_EQ(board.getPiece(0, 7)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(0, 7));
-
-    // Black pieces
-    EXPECT_EQ(board.getPiece(7, 0)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 1)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 2)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 3)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 4)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 5)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 6)->getPlayerID(), chess::BLACK);
-    EXPECT_EQ(board.getPiece(7, 7)->getPlayerID(), chess::BLACK);
-
-    EXPECT_EQ(board.getPiece(7, 0)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 0));
-    EXPECT_EQ(board.getPiece(7, 1)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 1));
-    EXPECT_EQ(board.getPiece(7, 2)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 2));
-    EXPECT_EQ(board.getPiece(7, 3)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 3));
-    EXPECT_EQ(board.getPiece(7, 4)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 4));
-    EXPECT_EQ(board.getPiece(7, 5)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 5));
-    EXPECT_EQ(board.getPiece(7, 6)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 6));
-    EXPECT_EQ(board.getPiece(7, 7)->getPossibleMoves(&board), getExpectedMovesOnNewBoard(7, 7));
 }
