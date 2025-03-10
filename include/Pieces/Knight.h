@@ -15,10 +15,11 @@ public:
     ~Knight() {}
 
     std::set<Position> getPossibleMoves(const Board *board) const override {
-        (void) board;
-        std::set<Position> validMoves;
-        // validMoves = board->getValidMoves(pos_, KNIGHT); // TODO
-        return validMoves;
+        // (void) board;
+        // std::set<Position> validMoves;
+        // // validMoves = board->getValidMoves(pos_, KNIGHT); // TODO
+        // return validMoves;
+        return board->getLShapeMoves(pos, player_id, {1, 2});
     }
 };
 
