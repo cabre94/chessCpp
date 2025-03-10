@@ -15,10 +15,11 @@ public:
     ~Queen() {}
 
     std::set<Position> getPossibleMoves(const Board *board) override {
-        (void) board;
-        std::set<Position> validMoves;
-        // validMoves = board->getValidMoves(from, QUEEN); // TODO
-        return validMoves;
+        // (void) board;
+        // std::set<Position> validMoves;
+        // // validMoves = board->getValidMoves(from, QUEEN); // TODO
+        // return validMoves;
+        return board->getAllDirectionMoves(pos, player_id);
     }
 };
 
