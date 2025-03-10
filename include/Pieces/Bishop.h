@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Boards/Board.h"
 #include "Pieces/Piece.h"
 #include "Pieces/Utils.h"
 #include "Positions/Position.h"
@@ -14,12 +15,13 @@ public:
     ~Bishop() {}
 
     std::set<Position> getPossibleMoves(const Board *board) const override {
-        (void) board;
-        std::set<Position> validMoves;
+        // (void) board;
+        // std::set<Position> validMoves;
 
-        // validMoves = board->getValidMoves(pos, BISHOP); // TODO
+        // // validMoves = board->getValidMoves(pos, BISHOP); // TODO
 
-        return validMoves;
+        // return validMoves;
+        return board->getDiagonalMoves(pos, player_id);
     }
 };
 
