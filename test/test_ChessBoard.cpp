@@ -6,7 +6,15 @@
 #include <string>
 
 #include "Boards/ChessBoard.h"
+#include "Pieces/Piece.h"
+#include "Pieces/Utils.h"
 #include "Positions/Position.h"
+
+class TestChessBoard : public chess::ChessBoard {
+public:
+    void testInitializePieces() { initializePieces(); }
+    chess::Piece *getPiece(uint32_t r, uint32_t c) { return ChessBoard::getPiece(r, c); }
+};
 
 // #include "Champion.h"
 // #include "King.h"
@@ -150,6 +158,53 @@ expectedForwardMovesEmptyBoard(uint32_t r, uint32_t c, const std::vector<int16_t
     return exp_set;
 }
 
+static std::set<chess::Position> expectedKingMovesEmptyBoard(uint32_t r, uint32_t c) {
+    std::set<chess::Position> exp_set;
+
+    // Iteramos sobre todas las direcciones posibles (una casilla a la vez)
+    for (int32_t dr = -1; dr <= 1; ++dr) {
+        for (int32_t dc = -1; dc <= 1; ++dc) {
+            if (dr == 0 && dc == 0)
+                continue; // No incluimos la posición actual
+            int32_t new_r = static_cast<int32_t>(r) + dr;
+            int32_t new_c = static_cast<int32_t>(c) + dc;
+            if (new_r >= 0 && new_r < static_cast<int32_t>(chess::ChessBoard::N_ROW) &&
+                new_c >= 0 && new_c < static_cast<int32_t>(chess::ChessBoard::N_COL)) {
+                exp_set.insert(chess::Position(new_r, new_c));
+            }
+        }
+    }
+
+    return exp_set;
+}
+
+static std::set<chess::Position> getExpMovesOnNewBoard(uint32_t r, uint32_t c) {
+    std::set<chess::Position> moves;
+
+    if (r == 1) { // White pawns
+        moves.insert({2, c});
+        moves.insert({3, c});
+    } else if (r == 6) { // Black pawns
+        moves.insert({5, c});
+        moves.insert({4, c});
+    }
+
+    std::vector<chess::Position> possibleMoves;
+    if ((r == 0) && (c == 1 || c == 6)) { // White Knights
+        possibleMoves = {{r + 2, c + 1}, {r + 2, c - 1}};
+    } else if ((r == 7) && (c == 1 || c == 6)) { // Black Knights
+        possibleMoves = {{r - 2, c + 1}, {r - 2, c - 1}};
+    }
+
+    for (const auto &pos : possibleMoves) {
+        if (pos[0] < chess::ChessBoard::N_COL && pos[1] < chess::ChessBoard::N_ROW) {
+            moves.insert(pos);
+        }
+    }
+
+    return moves;
+}
+
 static std::set<chess::Position> expectedAllDirectionMovesEmptyBoard(uint32_t r, uint32_t c) {
     std::set<chess::Position> exp_set = expectedParallelMovesEmptyBoard(r, c);
     std::set<chess::Position> exp_diagonal_moves = expectedDiagonalMovesEmptyBoard(r, c);
@@ -262,6 +317,29 @@ TEST(ChessBoard, getFordwardMoves) {
     }
 }
 
+TEST(ChessBoard, getOneStepMoves) {
+    chess::ChessBoard board;
+
+    std::set<chess::Position> moves, expected_moves;
+    chess::Position pos(0, 0);
+
+    for (uint32_t r = 0; r < chess::ChessBoard::N_ROW; r++) {
+        for (uint32_t c = 0; c < chess::ChessBoard::N_COL; c++) {
+            // Get expected set of valid moves for this position
+            expected_moves = expectedKingMovesEmptyBoard(r, c);
+
+            // Create current position
+            pos = chess::Position(r, c);
+
+            // Get moves from board
+            moves = board.getOneStepMoves(pos, chess::WHITE);
+
+            // printSetPositions(pos, moves);
+            EXPECT_EQ(moves, expected_moves) << "Error en posición (" << r << ", " << c << ")";
+        }
+    }
+}
+
 TEST(ChessBoard, getAllDirectionMoves) {
     chess::ChessBoard board;
 
@@ -281,6 +359,34 @@ TEST(ChessBoard, getAllDirectionMoves) {
 
             // printSetPositions(pos, moves);
             EXPECT_EQ(moves, expected_moves) << "Error en posición (" << r << ", " << c << ")";
+        }
+    }
+}
+
+TEST(ChessBoard, InitializePiecesTest) {
+    chess::PlayerID exp_player_id = chess::WHITE;
+    std::string exp_names[] = {chess::ROOK_NAME,   chess::KNIGHT_NAME, chess::BISHOP_NAME,
+                               chess::QUEEN_NAME,  chess::KING_NAME,   chess::BISHOP_NAME,
+                               chess::KNIGHT_NAME, chess::ROOK_NAME};
+
+    TestChessBoard board;
+    board.testInitializePieces(); // initialize pieces
+
+    // Pawns
+    for (uint32_t r : {0, 1, 6, 7}) {
+        if (r == 6)
+            exp_player_id = chess::BLACK;
+
+        for (uint32_t c = 0; c < chess::ChessBoard::N_COL; ++c) {
+            EXPECT_EQ(board.getPiece(r, c)->getPlayerID(), exp_player_id);
+            EXPECT_EQ(board.getPiece(r, c)->getPosition(), chess::Position(r, c));
+            EXPECT_EQ(board.getPiece(r, c)->getPossibleMoves(&board), getExpMovesOnNewBoard(r, c));
+
+            if (r == 0 || r == 7) {
+                EXPECT_EQ(board.getPiece(r, c)->getName(), exp_names[c]);
+            } else { // row of pawns
+                EXPECT_EQ(board.getPiece(r, c)->getName(), chess::PAWN_NAME);
+            }
         }
     }
 }

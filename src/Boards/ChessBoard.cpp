@@ -43,7 +43,7 @@ ChessBoard::ChessBoard() : Board() {
 
 ChessBoard::~ChessBoard() {
 
-    // clearBoard();
+    clearBoard();
     // delete [] positions;
 }
 
@@ -76,7 +76,8 @@ void ChessBoard::printBoard() const {
                 std::cout << "   \u2502";
             else {
                 std::cout << " ";
-                piece->printPiece();
+                std::cout << *piece;
+                // piece->printPiece();
                 std::cout << " ";
                 std::cout << "\u2502";
             }
@@ -118,11 +119,14 @@ std::set<Position> ChessBoard::getParallelMoves(const Position &pos,
     uint32_t rr = pos[1];
     uint32_t cc = pos[0];
 
+    int32_t dc, dr;
+    uint32_t c, r;
     for (const auto &dir : directions) {
-        int32_t dc = dir[0], dr = dir[1];
+        dc = dir[0];
+        dr = dir[1];
 
-        uint32_t c = cc + dc;
-        uint32_t r = rr + dr;
+        c = cc + dc;
+        r = rr + dr;
 
         while (validIdxs(r, c)) {
             // Check if there is a piece on position of idxs (r,c)
@@ -160,11 +164,14 @@ std::set<Position> ChessBoard::getDiagonalMoves(const Position &pos,
     uint32_t rr = pos[1];
     uint32_t cc = pos[0];
 
+    int32_t dc, dr;
+    uint32_t c, r;
     for (const auto &dir : directions) {
-        int32_t dc = dir[0], dr = dir[1];
+        dc = dir[0];
+        dr = dir[1];
 
-        uint32_t c = cc + dc;
-        uint32_t r = rr + dr;
+        c = cc + dc;
+        r = rr + dr;
 
         while (validIdxs(r, c)) {
             // Check if there is a piece on position of idxs (r,c)
@@ -206,11 +213,14 @@ std::set<chess::Position> ChessBoard::getLShapeMoves(const Position &pos, const 
                                                       {-dcc, drr},  {drr, -dcc}, {dcc, -drr},
                                                       {-drr, -dcc}, {-dcc, -drr}};
 
+    int32_t dc, dr;
+    uint32_t c, r;
     for (const auto &dir : directions) {
-        int32_t dc = dir[0], dr = dir[1];
+        dc = dir[0];
+        dr = dir[1];
 
-        uint32_t c = cc + dc;
-        uint32_t r = rr + dr;
+        c = cc + dc;
+        r = rr + dr;
 
         if (validIdxs(r, c)) {
             if (pieces[r][c] == nullptr || pieces[r][c]->getPlayerID() != player_id)
@@ -222,7 +232,7 @@ std::set<chess::Position> ChessBoard::getLShapeMoves(const Position &pos, const 
 }
 
 std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const PlayerID player_id,
-                                                std::vector<int16_t> forward_dir,
+                                                const std::vector<int16_t> &forward_dir,
                                                 bool first) const {
 
     std::set<chess::Position> moves;
@@ -239,9 +249,10 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
 
     // Forward movement (no capture)
     uint32_t max_steps = first ? 2 : 1;
+    uint32_t r, c;
     for (uint32_t step = 1; step <= max_steps; ++step) {
-        uint32_t r = rr + step * dr;
-        uint32_t c = cc + step * dc;
+        r = rr + step * dr;
+        c = cc + step * dc;
 
         if (!validIdxs(r, c) || pieces[r][c] != nullptr) {
             break; // Cant move forward
@@ -254,8 +265,8 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
     constexpr int32_t diagonal_offsets[2] = {-1, 1}; // Relative diagonal movements
 
     for (const int32_t &offset : diagonal_offsets) {
-        int32_t r = rr + dr;
-        int32_t c = cc + offset; // Move to the left or right
+        r = rr + dr;
+        c = cc + offset; // Move to the left or right
 
         if (validIdxs(r, c) && pieces[r][c] != nullptr) {
             if (pieces[r][c]->getPlayerID() != player_id)
@@ -268,6 +279,34 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
     return moves;
 }
 
+std::set<Position> ChessBoard::getOneStepMoves(const Position &pos,
+                                               const PlayerID player_id) const {
+
+    std::set<chess::Position> moves;
+
+    // Get row and column of current position
+    uint32_t rr = pos[1];
+    uint32_t cc = pos[0];
+
+    uint32_t c, r;
+    for (int32_t dc = -1; dc <= 1; ++dc) {
+        for (int32_t dr = -1; dr <= 1; ++dr) {
+            if (dc == 0 && dr == 0)
+                continue;
+
+            c = cc + dc;
+            r = rr + dr;
+
+            if (validIdxs(r, c)) {
+                if (pieces[r][c] == nullptr || pieces[r][c]->getPlayerID() != player_id)
+                    moves.insert(chess::Position(r, c));
+            }
+        }
+    }
+
+    return moves;
+}
+
 std::set<Position> ChessBoard::getAllDirectionMoves(const Position &pos,
                                                     const PlayerID player_id) const {
     std::set<Position> moves = getParallelMoves(pos, player_id);
@@ -276,6 +315,47 @@ std::set<Position> ChessBoard::getAllDirectionMoves(const Position &pos,
     moves.insert(diagonal_moves.begin(), diagonal_moves.end());
 
     return moves;
+}
+
+void ChessBoard::clearBoard() {
+
+    for (uint32_t r = 0; r < N_ROW; ++r) {
+        for (uint32_t c = 0; c < N_COL; ++c) {
+            if (pieces[r][c] != nullptr) {
+                delete pieces[r][c];
+                pieces[r][c] = nullptr;
+            }
+        }
+    }
+}
+
+void ChessBoard::initializePieces() {
+
+    // Pawns
+    for (uint32_t c = 0; c < N_COL; ++c) {
+        pieces[1][c] = new Pawn(PlayerID::WHITE, {1, c}); // White pawns
+        pieces[6][c] = new Pawn(PlayerID::BLACK, {6, c}); // Black pawns
+    }
+
+    // White pieces
+    pieces[0][0] = new Rook(PlayerID::WHITE, {0, 0});
+    pieces[0][1] = new Knight(PlayerID::WHITE, {0, 1});
+    pieces[0][2] = new Bishop(PlayerID::WHITE, {0, 2});
+    pieces[0][3] = new Queen(PlayerID::WHITE, {0, 3});
+    pieces[0][4] = new King(PlayerID::WHITE, {0, 4});
+    pieces[0][5] = new Bishop(PlayerID::WHITE, {0, 5});
+    pieces[0][6] = new Knight(PlayerID::WHITE, {0, 6});
+    pieces[0][7] = new Rook(PlayerID::WHITE, {0, 7});
+
+    // Black pieces
+    pieces[7][0] = new Rook(PlayerID::BLACK, {7, 0});
+    pieces[7][1] = new Knight(PlayerID::BLACK, {7, 1});
+    pieces[7][2] = new Bishop(PlayerID::BLACK, {7, 2});
+    pieces[7][3] = new Queen(PlayerID::BLACK, {7, 3});
+    pieces[7][4] = new King(PlayerID::BLACK, {7, 4});
+    pieces[7][5] = new Bishop(PlayerID::BLACK, {7, 5});
+    pieces[7][6] = new Knight(PlayerID::BLACK, {7, 6});
+    pieces[7][7] = new Rook(PlayerID::BLACK, {7, 7});
 }
 
 bool ChessBoard::validIdxs(uint32_t r, uint32_t c) const { return r < N_ROW && c < N_COL; }
@@ -311,123 +391,6 @@ void ChessBoard::createPices(const char c) {
             std::cout << "invalid input" << std::endl; //! Deberia tirar una excepcion
             exit(1);
     }
-}
-#endif
-
-#if 0
-void ChessBoard::initializePieces() {
-
-    // Aca asumo que el vector para esta inicializado y tiene los punteros a vector
-
-    // Piezas blancas
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "A2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "B2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "C2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "D2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "E2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "F2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "G2"));
-    all_pieces.at(WHITE)->push_back(new Pawn(WHITE, "H2"));
-
-    all_pieces.at(WHITE)->push_back(new Rook(WHITE, "A1"));
-    all_pieces.at(WHITE)->push_back(new Knight(WHITE, "B1"));
-    all_pieces.at(WHITE)->push_back(new Bishop(WHITE, "C1"));
-    all_pieces.at(WHITE)->push_back(new Queen(WHITE, "D1"));
-    all_pieces.at(WHITE)->push_back(new King(WHITE, "E1"));
-    all_pieces.at(WHITE)->push_back(new Bishop(WHITE, "F1"));
-    all_pieces.at(WHITE)->push_back(new Knight(WHITE, "G1"));
-    all_pieces.at(WHITE)->push_back(new Rook(WHITE, "H1"));
-
-    // Piezas negras
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "A7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "B7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "C7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "D7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "E7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "F7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "G7"));
-    all_pieces.at(BLACK)->push_back(new Pawn(BLACK, "H7"));
-
-    all_pieces.at(BLACK)->push_back(new Rook(BLACK, "A8"));
-    all_pieces.at(BLACK)->push_back(new Knight(BLACK, "B8"));
-    all_pieces.at(BLACK)->push_back(new Bishop(BLACK, "C8"));
-    all_pieces.at(BLACK)->push_back(new Queen(BLACK, "D8"));
-    all_pieces.at(BLACK)->push_back(new King(BLACK, "E8"));
-    all_pieces.at(BLACK)->push_back(new Bishop(BLACK, "F8"));
-    all_pieces.at(BLACK)->push_back(new Knight(BLACK, "G8"));
-    all_pieces.at(BLACK)->push_back(new Rook(BLACK, "H8"));
-
-    // whiteTurn = true;
-    // gameEnded = false;
-
-    // whiteKingPos = "E1";
-    // blackKingPos = "E8";
-
-    // updatePiecesPositions();
-
-    // updateAllValidMoves();
-
-    // updateGameState();
-
-}
-#endif
-
-#if 0
-void ChessBoard::clearBoard() {
-
-    // for(int i=0; i < 8; ++i){
-    //     for(int j=0; j < 8; ++j){
-    //         if(pieces[i][j] != nullptr){    // ? Seria mejor un metodo que me diga si hay pieza?
-    //             delete pieces[i][j];
-    //             pieces[i][j] = nullptr;
-    //         }
-    //     }
-    // }
-}
-#endif
-
-#if 0
-void ChessBoard::initializePieces(){
-    for(int i=0; i < 8; ++i)
-        for(int j=0; j < 8; ++j)
-            pieces[i][j] = nullptr;
-    // Agrego los peones
-    for(int j=0; j < 8; ++j){
-        pieces[1][j] = new Pawn(WHITE);
-        pieces[6][j] = new Pawn(BLACK);
-    }
-
-    // Agrego el resto de piezas blancas
-    pieces[0][0] = new Rook(WHITE);
-    pieces[0][1] = new Knight(WHITE);
-    pieces[0][2] = new Bishop(WHITE);
-    pieces[0][3] = new Queen(WHITE);
-    pieces[0][4] = new King(WHITE);
-    pieces[0][5] = new Bishop(WHITE);
-    pieces[0][6] = new Knight(WHITE);
-    pieces[0][7] = new Rook(WHITE);
-
-    // Agrego las piezas negras
-    pieces[7][0] = new Rook(BLACK);
-    pieces[7][1] = new Knight(BLACK);
-    pieces[7][2] = new Bishop(BLACK);
-    pieces[7][3] = new Queen(BLACK);
-    pieces[7][4] = new King(BLACK);
-    pieces[7][5] = new Bishop(BLACK);
-    pieces[7][6] = new Knight(BLACK);
-    pieces[7][7] = new Rook(BLACK);
-
-    whiteTurn = true;
-    gameEnded = false;
-
-    whiteKingPos = "E1";
-    blackKingPos = "E8";
-
-    updatePiecesPositions();
-
-    updateAllValidMoves();
-
-    updateGameState();
 }
 #endif
 

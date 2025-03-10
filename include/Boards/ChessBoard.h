@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <string>
 
 #include "Boards/Board.h"
@@ -33,23 +34,30 @@ public:
     std::set<Position> getLShapeMoves(const Position &pos, const PlayerID player_id,
                                       const std::vector<uint16_t> &deltas) const override;
     std::set<Position> getFordwardMoves(const Position &pos, const PlayerID player_id,
-                                        std::vector<int16_t> forward_dir,
+                                        const std::vector<int16_t> &forward_dir,
                                         bool first = false) const override;
+    std::set<Position> getOneStepMoves(const Position &pos,
+                                       const PlayerID player_id) const override;
     std::set<Position> getAllDirectionMoves(const Position &pos,
                                             const PlayerID player_id) const override;
 
-private:
-    // void initializePieces();
+protected:
+    void clearBoard();
+
+    void initializePieces();
     // void initializePiecesButterfly();
     // void initializePiecesPawnGame();
     // void initializePiecesChampionMagician();
-
-    // void clearBoard();
 
     bool validIdxs(uint32_t r, uint32_t c) const;
     bool validPos(const Position &pos) const;
 
     Position idx2Pos(const uint32_t r, const uint32_t c) const;
+
+    Piece *getPiece(uint32_t r, uint32_t c) {
+        assert(validIdxs(r, c));
+        return pieces[r][c];
+    }
 
 public:
     static const uint32_t N_ROW = 8;
