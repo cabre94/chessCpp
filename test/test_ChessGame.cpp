@@ -6,19 +6,11 @@
 #include "Boards/Board.h"
 #include "Boards/ChessBoard.h"
 #include "ChessGame.h"
-#include "Pieces/Bishop.h"
-#include "Pieces/Champion.h"
-#include "Pieces/King.h"
-#include "Pieces/Knight.h"
-#include "Pieces/Magician.h"
-#include "Pieces/Pawn.h"
-#include "Pieces/Queen.h"
-#include "Pieces/Rook.h"
+#include "Pieces/Utils.h"
 #include "Positions/Position.h"
 
 class TestChessGame : public chess::ChessGame {
 public:
-    // void testInitializePieces() { initializePieces(); }
     chess::Piece *getPiece(uint32_t r, uint32_t c) { return board->getPiece(r, c); }
 
     std::set<chess::Position> getPossibleMoves(uint32_t r, uint32_t c) {
@@ -63,6 +55,7 @@ TEST(ChessGame, printBoard) {
     game.printBoard();
 }
 
+//
 static std::set<chess::Position> getExpMovesOnNewBoard(uint32_t r, uint32_t c) {
     std::set<chess::Position> moves;
 
