@@ -16,13 +16,6 @@
 #include "Pieces/Rook.h"
 #include "Positions/Position.h"
 
-// static chess::Position getRandomValidPosition() {
-//     uint32_t r = rand() % 8;
-//     uint32_t c = rand() % 8;
-
-//     return chess::Position(r, c);
-// }
-
 class TestChessGame : public chess::ChessGame {
 public:
     // void testInitializePieces() { initializePieces(); }
