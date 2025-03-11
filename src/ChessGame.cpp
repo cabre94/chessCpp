@@ -1,48 +1,112 @@
 #include "ChessGame.h"
 #include "Boards/Board.h"
 #include "Boards/ChessBoard.h"
+#include "Pieces/Bishop.h"
+#include "Pieces/Champion.h"
+#include "Pieces/King.h"
+#include "Pieces/Knight.h"
+#include "Pieces/Magician.h"
+#include "Pieces/Pawn.h"
+#include "Pieces/Queen.h"
+#include "Pieces/Rook.h"
 #include "Positions/Position.h"
 
 namespace chess {
 
 ChessGame::ChessGame() {
-    std::cout << "Choose chess variant" << std::endl;
-    std::cout << "n: Normal Chess game" << std::endl;
-    std::cout << "b: ButterflyChess - Normal board chess with butterfly distribution" << std::endl;
-    std::cout << "p: PawnChess -Normal board chess with Pawn Game distribution" << std::endl;
-    std::cout << "c: PawnChess -Normal board chess with Champion and Magician pieces" << std::endl;
+    std::cout << "Choose chess variant\n";
+    std::cout << "n: Normal Chess game\n";
+    std::cout << "b: ButterflyChess - Normal board chess with butterfly distribution\n";
+    std::cout << "p: PawnChess -Normal board chess with Pawn Game distribution\n";
+    std::cout << "c: PawnChess -Normal board chess with Champion and Magician pieces\n";
 
-    char c;
-    std::cin >> c;
+    // char c;
+    // std::cin >> c;
 
-    boardPtr = new ChessBoard();
+    // board = new ChessBoard();
+    initializeGame();
 }
 
-ChessGame::~ChessGame() { delete boardPtr; }
+ChessGame::~ChessGame() {
+    freePieces(w_pieces);
+    freePieces(b_pieces);
+
+    delete board;
+}
 
 void ChessGame::play() {
 
-    // while (!boardPtr->askWinner()) {
+    // while (!board->askWinner()) {
     //     // system("clear");
 
     //     // bool succesMove;
 
     //     std::string from, to;
 
-    //     boardPtr->printPosAndPieces();
-    //     boardPtr->printBoard();
+    //     board->printPosAndPieces();
+    //     board->printBoard();
 
     //     printCheckMessage();
 
-    //     // succesMove = boardPtr->makeMove(from, to);
+    //     // succesMove = board->makeMove(from, to);
     // }
+
+    char c;
+
+    while (c != 'q') {
+        board->printBoard();
+
+        std::cin >> c;
+    }
 }
 
-void ChessGame::printCheckMessage() const {
-    // if (boardPtr->isWhiteInCheck())
-    //     std::cout << "White king is in check" << std::endl;
-    // if (boardPtr->isBlackInCheck())
-    //     std::cout << "Black king is in check" << std::endl;
+// void ChessGame::printCheckMessage() const {
+//     // if (board->isWhiteInCheck())
+//     //     std::cout << "White king is in check" << std::endl;
+//     // if (board->isBlackInCheck())
+//     //     std::cout << "Black king is in check" << std::endl;
+// }
+
+void ChessGame::initializeGame() {
+    createPieces();
+
+    board = new ChessBoard();
+    board->placePieces(w_pieces);
+    board->placePieces(b_pieces);
+}
+
+void ChessGame::createPieces() {
+    // Pawns
+    for (uint32_t c = 0; c < ChessBoard::N_COL; ++c) {
+        w_pieces.push_back(new Pawn(PlayerID::WHITE, {1, c})); // White pawns
+        b_pieces.push_back(new Pawn(PlayerID::BLACK, {6, c})); // Black pawns
+    }
+
+    // White pieces
+    w_pieces.push_back(new Rook(PlayerID::WHITE, {0, 0}));
+    w_pieces.push_back(new Knight(PlayerID::WHITE, {0, 1}));
+    w_pieces.push_back(new Bishop(PlayerID::WHITE, {0, 2}));
+    w_pieces.push_back(new Queen(PlayerID::WHITE, {0, 3}));
+    w_pieces.push_back(new King(PlayerID::WHITE, {0, 4}));
+    w_pieces.push_back(new Bishop(PlayerID::WHITE, {0, 5}));
+    w_pieces.push_back(new Knight(PlayerID::WHITE, {0, 6}));
+    w_pieces.push_back(new Rook(PlayerID::WHITE, {0, 7}));
+
+    // Black pieces
+    b_pieces.push_back(new Rook(PlayerID::BLACK, {7, 0}));
+    b_pieces.push_back(new Knight(PlayerID::BLACK, {7, 1}));
+    b_pieces.push_back(new Bishop(PlayerID::BLACK, {7, 2}));
+    b_pieces.push_back(new Queen(PlayerID::BLACK, {7, 3}));
+    b_pieces.push_back(new King(PlayerID::BLACK, {7, 4}));
+    b_pieces.push_back(new Bishop(PlayerID::BLACK, {7, 5}));
+    b_pieces.push_back(new Knight(PlayerID::BLACK, {7, 6}));
+    b_pieces.push_back(new Rook(PlayerID::BLACK, {7, 7}));
+}
+
+void ChessGame::freePieces(std::vector<Piece *> &pieces) {
+    for (Piece *p : pieces)
+        delete p;
+    pieces.clear();
 }
 
 } // namespace chess
