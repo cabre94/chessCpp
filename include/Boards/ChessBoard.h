@@ -31,20 +31,19 @@ public:
     std::set<Position> getAllDirectionMoves(const Position &pos,
                                             const PlayerID player_id) const override;
 
+    static const uint32_t N_ROW = 8;
+    static const uint32_t N_COL = 8;
+
 protected:
     void clearBoard();
 
-    bool validIdxs(uint32_t r, uint32_t c) const;
-    bool validPos(const Position &pos) const;
+    bool validIdxs(uint32_t r, uint32_t c) const { return r < N_ROW && c < N_COL; }
+    bool validPos(const Position &pos) const { return validIdxs(pos[1], pos[0]); }
 
     Piece *getPiece(uint32_t r, uint32_t c) {
         assert(validIdxs(r, c));
         return pieces[r][c];
     }
-
-public:
-    static const uint32_t N_ROW = 8;
-    static const uint32_t N_COL = 8;
 
 private:
     Piece *pieces[N_ROW][N_COL];

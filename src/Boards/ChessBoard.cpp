@@ -310,8 +310,4 @@ void ChessBoard::placePieces(const std::vector<Piece *> &v_pieces) {
     }
 }
 
-bool ChessBoard::validIdxs(uint32_t r, uint32_t c) const { return r < N_ROW && c < N_COL; }
-
-bool ChessBoard::validPos(const Position &pos) const { return validIdxs(pos[1], pos[0]); }
-
 } // namespace chess
