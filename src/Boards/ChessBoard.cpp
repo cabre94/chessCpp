@@ -1,13 +1,13 @@
 #include "Boards/ChessBoard.h"
 #include "Boards/Utils.h"
-#include "Pieces/Bishop.h"
-#include "Pieces/Champion.h"
-#include "Pieces/King.h"
-#include "Pieces/Knight.h"
-#include "Pieces/Magician.h"
-#include "Pieces/Pawn.h"
-#include "Pieces/Queen.h"
-#include "Pieces/Rook.h"
+// #include "Pieces/Bishop.h"
+// #include "Pieces/Champion.h"
+// #include "Pieces/King.h"
+// #include "Pieces/Knight.h"
+// #include "Pieces/Magician.h"
+// #include "Pieces/Pawn.h"
+// #include "Pieces/Queen.h"
+// #include "Pieces/Rook.h"
 #include "Positions/Position.h"
 
 namespace chess {
@@ -318,40 +318,52 @@ void ChessBoard::clearBoard() {
     for (uint32_t r = 0; r < N_ROW; ++r) {
         for (uint32_t c = 0; c < N_COL; ++c) {
             if (pieces[r][c] != nullptr) {
-                delete pieces[r][c];
+                // delete pieces[r][c]; ChessGame free memory
                 pieces[r][c] = nullptr;
             }
         }
     }
 }
 
-void ChessBoard::initializePieces() {
+void ChessBoard::placePieces(const std::vector<Piece *> &v_pieces) {
 
-    // Pawns
-    for (uint32_t c = 0; c < N_COL; ++c) {
-        pieces[1][c] = new Pawn(PlayerID::WHITE, {1, c}); // White pawns
-        pieces[6][c] = new Pawn(PlayerID::BLACK, {6, c}); // Black pawns
+    uint32_t r, c;
+    for (const auto &p : v_pieces) {
+        Position pos = p->getPosition();
+        r = pos[1];
+        c = pos[0];
+
+        if (pieces[r][c] != nullptr)
+            throw std::invalid_argument("position already has a piece");
+
+        pieces[r][c] = p;
     }
 
-    // White pieces
-    pieces[0][0] = new Rook(PlayerID::WHITE, {0, 0});
-    pieces[0][1] = new Knight(PlayerID::WHITE, {0, 1});
-    pieces[0][2] = new Bishop(PlayerID::WHITE, {0, 2});
-    pieces[0][3] = new Queen(PlayerID::WHITE, {0, 3});
-    pieces[0][4] = new King(PlayerID::WHITE, {0, 4});
-    pieces[0][5] = new Bishop(PlayerID::WHITE, {0, 5});
-    pieces[0][6] = new Knight(PlayerID::WHITE, {0, 6});
-    pieces[0][7] = new Rook(PlayerID::WHITE, {0, 7});
+    // // Pawns
+    // for (uint32_t c = 0; c < N_COL; ++c) {
+    //     pieces[1][c] = new Pawn(PlayerID::WHITE, {1, c}); // White pawns
+    //     pieces[6][c] = new Pawn(PlayerID::BLACK, {6, c}); // Black pawns
+    // }
 
-    // Black pieces
-    pieces[7][0] = new Rook(PlayerID::BLACK, {7, 0});
-    pieces[7][1] = new Knight(PlayerID::BLACK, {7, 1});
-    pieces[7][2] = new Bishop(PlayerID::BLACK, {7, 2});
-    pieces[7][3] = new Queen(PlayerID::BLACK, {7, 3});
-    pieces[7][4] = new King(PlayerID::BLACK, {7, 4});
-    pieces[7][5] = new Bishop(PlayerID::BLACK, {7, 5});
-    pieces[7][6] = new Knight(PlayerID::BLACK, {7, 6});
-    pieces[7][7] = new Rook(PlayerID::BLACK, {7, 7});
+    // // White pieces
+    // pieces[0][0] = new Rook(PlayerID::WHITE, {0, 0});
+    // pieces[0][1] = new Knight(PlayerID::WHITE, {0, 1});
+    // pieces[0][2] = new Bishop(PlayerID::WHITE, {0, 2});
+    // pieces[0][3] = new Queen(PlayerID::WHITE, {0, 3});
+    // pieces[0][4] = new King(PlayerID::WHITE, {0, 4});
+    // pieces[0][5] = new Bishop(PlayerID::WHITE, {0, 5});
+    // pieces[0][6] = new Knight(PlayerID::WHITE, {0, 6});
+    // pieces[0][7] = new Rook(PlayerID::WHITE, {0, 7});
+
+    // // Black pieces
+    // pieces[7][0] = new Rook(PlayerID::BLACK, {7, 0});
+    // pieces[7][1] = new Knight(PlayerID::BLACK, {7, 1});
+    // pieces[7][2] = new Bishop(PlayerID::BLACK, {7, 2});
+    // pieces[7][3] = new Queen(PlayerID::BLACK, {7, 3});
+    // pieces[7][4] = new King(PlayerID::BLACK, {7, 4});
+    // pieces[7][5] = new Bishop(PlayerID::BLACK, {7, 5});
+    // pieces[7][6] = new Knight(PlayerID::BLACK, {7, 6});
+    // pieces[7][7] = new Rook(PlayerID::BLACK, {7, 7});
 }
 
 bool ChessBoard::validIdxs(uint32_t r, uint32_t c) const { return r < N_ROW && c < N_COL; }

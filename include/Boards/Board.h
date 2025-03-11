@@ -23,6 +23,7 @@ public:
     Board &operator=(Board &&) = default;      // Move assignment
 
     virtual void printBoard() const = 0;
+    virtual void placePieces(const std::vector<Piece *> &v_pieces) = 0;
 
     // Aca deberian poner los metodos que dan las posiciones validas
     virtual std::set<Position> getDiagonalMoves(const Position &pos,

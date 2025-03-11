@@ -15,6 +15,7 @@ public:
     ~ChessBoard();
 
     void printBoard() const override;
+    void placePieces(const std::vector<Piece *> &v_pieces) override;
 
     std::set<Position> getParallelMoves(const Position &pos,
                                         const PlayerID player_id) const override;
@@ -33,7 +34,7 @@ public:
 protected:
     void clearBoard();
 
-    void initializePieces();
+    // void initializePieces();
     // void initializePiecesButterfly();
     // void initializePiecesPawnGame();
     // void initializePiecesChampionMagician();
@@ -53,7 +54,7 @@ public:
     static const uint32_t N_COL = 8;
 
 private:
-    Piece *pieces[N_ROW][N_COL]; //! No enteindo porque no puedo poner SIZE
+    Piece *pieces[N_ROW][N_COL];
 };
 
 } // namespace chess
