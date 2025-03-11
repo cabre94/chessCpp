@@ -1,40 +1,10 @@
 #include "Boards/ChessBoard.h"
 #include "Boards/Utils.h"
-// #include "Pieces/Bishop.h"
-// #include "Pieces/Champion.h"
-// #include "Pieces/King.h"
-// #include "Pieces/Knight.h"
-// #include "Pieces/Magician.h"
-// #include "Pieces/Pawn.h"
-// #include "Pieces/Queen.h"
-// #include "Pieces/Rook.h"
 #include "Positions/Position.h"
 
 namespace chess {
 
-// ChessBoard::ChessBoard(uint16_t nRow_, uint16_t nCol_) : nRow(nRow_), nCol(nCol_) {
 ChessBoard::ChessBoard() : Board() {
-
-#if 0
-    switch (c){
-        case 'n':
-            initializePieces();
-            break;
-        case 'b':
-            initializePiecesButterfly();
-            break;
-        case 'p':
-            initializePiecesPawnGame();
-            break;
-        case 'c':
-            initializePiecesChampionMagician();
-            break;
-        default:
-            std::cout << "invalid input" << std::endl;  //! Deberia tirar una excepcion
-            exit(1);
-    }
-#endif
-
     for (size_t r = 0; r < N_ROW; r++) {
         for (size_t c = 0; c < N_COL; c++) {
             pieces[r][c] = nullptr;
@@ -317,10 +287,10 @@ void ChessBoard::clearBoard() {
 
     for (uint32_t r = 0; r < N_ROW; ++r) {
         for (uint32_t c = 0; c < N_COL; ++c) {
-            if (pieces[r][c] != nullptr) {
-                // delete pieces[r][c]; ChessGame free memory
-                pieces[r][c] = nullptr;
-            }
+            pieces[r][c] = nullptr;
+            // if (pieces[r][c] != nullptr) {
+            // // delete pieces[r][c]; ChessGame free memory
+            // pieces[r][c] = nullptr;
         }
     }
 }
@@ -338,228 +308,10 @@ void ChessBoard::placePieces(const std::vector<Piece *> &v_pieces) {
 
         pieces[r][c] = p;
     }
-
-    // // Pawns
-    // for (uint32_t c = 0; c < N_COL; ++c) {
-    //     pieces[1][c] = new Pawn(PlayerID::WHITE, {1, c}); // White pawns
-    //     pieces[6][c] = new Pawn(PlayerID::BLACK, {6, c}); // Black pawns
-    // }
-
-    // // White pieces
-    // pieces[0][0] = new Rook(PlayerID::WHITE, {0, 0});
-    // pieces[0][1] = new Knight(PlayerID::WHITE, {0, 1});
-    // pieces[0][2] = new Bishop(PlayerID::WHITE, {0, 2});
-    // pieces[0][3] = new Queen(PlayerID::WHITE, {0, 3});
-    // pieces[0][4] = new King(PlayerID::WHITE, {0, 4});
-    // pieces[0][5] = new Bishop(PlayerID::WHITE, {0, 5});
-    // pieces[0][6] = new Knight(PlayerID::WHITE, {0, 6});
-    // pieces[0][7] = new Rook(PlayerID::WHITE, {0, 7});
-
-    // // Black pieces
-    // pieces[7][0] = new Rook(PlayerID::BLACK, {7, 0});
-    // pieces[7][1] = new Knight(PlayerID::BLACK, {7, 1});
-    // pieces[7][2] = new Bishop(PlayerID::BLACK, {7, 2});
-    // pieces[7][3] = new Queen(PlayerID::BLACK, {7, 3});
-    // pieces[7][4] = new King(PlayerID::BLACK, {7, 4});
-    // pieces[7][5] = new Bishop(PlayerID::BLACK, {7, 5});
-    // pieces[7][6] = new Knight(PlayerID::BLACK, {7, 6});
-    // pieces[7][7] = new Rook(PlayerID::BLACK, {7, 7});
 }
 
 bool ChessBoard::validIdxs(uint32_t r, uint32_t c) const { return r < N_ROW && c < N_COL; }
 
 bool ChessBoard::validPos(const Position &pos) const { return validIdxs(pos[1], pos[0]); }
-
-// Position ChessBoard::pos2string(int x, int y){
-Position ChessBoard::idx2Pos(const uint32_t r, const uint32_t c) const {
-    if (validIdxs(r, c))
-        throw std::out_of_range("ChessBoard::idx2Pos: Invalid indexes");
-
-    return Position(r, c);
-}
-
-////////////////////////////////////////////////////////////////
-
-#if 0
-void ChessBoard::createPices(const char c) {
-    switch (c) {
-        case 'n':
-            initializePieces();
-            break;
-        // case 'b':
-        //     initializePiecesButterfly();
-        //     break;
-        // case 'p':
-        //     initializePiecesPawnGame();
-        //     break;
-        // case 'c':
-        //     initializePiecesChampionMagician();
-        //     break;
-        default:
-            std::cout << "invalid input" << std::endl; //! Deberia tirar una excepcion
-            exit(1);
-    }
-}
-#endif
-
-#if 0
-void ChessBoard::initializePiecesButterfly(){
-    for(int i=0; i < 8; ++i)
-        for(int j=0; j < 8; ++j)
-            pieces[i][j] = nullptr;
-    // Agrego los peones con la distribucion mariposa
-    pieces[1][0] = new Pawn(WHITE);
-    pieces[2][1] = new Pawn(WHITE);
-    pieces[3][2] = new Pawn(WHITE);
-    pieces[4][3] = new Pawn(WHITE);
-    pieces[4][4] = new Pawn(WHITE);
-    pieces[3][5] = new Pawn(WHITE);
-    pieces[2][6] = new Pawn(WHITE);
-    pieces[1][7] = new Pawn(WHITE);
-
-    pieces[6][0] = new Pawn(BLACK);
-    pieces[5][1] = new Pawn(BLACK);
-    pieces[4][2] = new Pawn(BLACK);
-    pieces[3][3] = new Pawn(BLACK);
-    pieces[3][4] = new Pawn(BLACK);
-    pieces[4][5] = new Pawn(BLACK);
-    pieces[5][6] = new Pawn(BLACK);
-    pieces[6][7] = new Pawn(BLACK);
-    
-
-    // Agrego el resto de piezas blancas
-    pieces[0][0] = new Rook(WHITE);
-    pieces[0][1] = new Knight(WHITE);
-    pieces[0][2] = new Bishop(WHITE);
-    pieces[0][3] = new Queen(WHITE);
-    pieces[0][4] = new King(WHITE);
-    pieces[0][5] = new Bishop(WHITE);
-    pieces[0][6] = new Knight(WHITE);
-    pieces[0][7] = new Rook(WHITE);
-
-    // Agrego las piezas negras
-    pieces[7][0] = new Rook(BLACK);
-    pieces[7][1] = new Knight(BLACK);
-    pieces[7][2] = new Bishop(BLACK);
-    pieces[7][3] = new Queen(BLACK);
-    pieces[7][4] = new King(BLACK);
-    pieces[7][5] = new Bishop(BLACK);
-    pieces[7][6] = new Knight(BLACK);
-    pieces[7][7] = new Rook(BLACK);
-
-    whiteTurn = true;
-    gameEnded = false;
-
-    whiteKingPos = "E1";
-    blackKingPos = "E8";
-
-    updatePiecesPositions();
-
-    updateAllValidMoves();
-
-    updateGameState();
-}
-#endif
-
-#if 0
-void ChessBoard::initializePiecesPawnGame(){
-    for(int i=0; i < 8; ++i)
-        for(int j=0; j < 8; ++j)
-            pieces[i][j] = nullptr;
-    // Agrego los peones
-    for(int j=0; j < 8; ++j){
-        pieces[1][j] = new Pawn(WHITE);
-        pieces[6][j] = new Pawn(BLACK);
-    }
-
-    // Agrego los peones extra para las blancas en esta distribucion
-    pieces[2][1] = new Pawn(WHITE);
-    pieces[2][2] = new Pawn(WHITE);
-    pieces[2][5] = new Pawn(WHITE);
-    pieces[2][6] = new Pawn(WHITE);
-
-    pieces[3][2] = new Pawn(WHITE);
-    pieces[3][3] = new Pawn(WHITE);
-    pieces[3][4] = new Pawn(WHITE);
-    pieces[3][5] = new Pawn(WHITE);
-
-    // Agrego el resto de piezas blancas
-    pieces[0][0] = new Rook(WHITE);
-    pieces[0][1] = new Knight(WHITE);
-    pieces[0][2] = new Bishop(WHITE);
-    // pieces[0][3] = new Queen(WHITE);     // Saco la reina blanca
-    pieces[0][4] = new King(WHITE);
-    pieces[0][5] = new Bishop(WHITE);
-    pieces[0][6] = new Knight(WHITE);
-    pieces[0][7] = new Rook(WHITE);
-
-    // Agrego las piezas negras
-    pieces[7][0] = new Rook(BLACK);
-    pieces[7][1] = new Knight(BLACK);
-    pieces[7][2] = new Bishop(BLACK);
-    pieces[7][3] = new Queen(BLACK);
-    pieces[7][4] = new King(BLACK);
-    pieces[7][5] = new Bishop(BLACK);
-    pieces[7][6] = new Knight(BLACK);
-    pieces[7][7] = new Rook(BLACK);
-
-    whiteTurn = true;
-    gameEnded = false;
-
-    whiteKingPos = "E1";
-    blackKingPos = "E8";
-
-    updatePiecesPositions();
-
-    updateAllValidMoves();
-
-    updateGameState();
-}
-#endif
-
-#if 0
-void ChessBoard::initializePiecesChampionMagician(){
-    for(int i=0; i < 8; ++i)
-        for(int j=0; j < 8; ++j)
-            pieces[i][j] = nullptr;
-    // Agrego los peones
-    for(int j=0; j < 8; ++j){
-        pieces[1][j] = new Pawn(WHITE);
-        pieces[6][j] = new Pawn(BLACK);
-    }
-
-    // Agrego el resto de piezas blancas
-    pieces[0][0] = new Champion(WHITE);
-    pieces[0][1] = new Magician(WHITE);
-    pieces[0][2] = new Bishop(WHITE);
-    pieces[0][3] = new Queen(WHITE);
-    pieces[0][4] = new King(WHITE);
-    pieces[0][5] = new Bishop(WHITE);
-    pieces[0][6] = new Magician(WHITE);
-    pieces[0][7] = new Champion(WHITE);
-
-    // Agrego las piezas negras
-    pieces[7][0] = new Champion(BLACK);
-    pieces[7][1] = new Magician(BLACK);
-    pieces[7][2] = new Bishop(BLACK);
-    pieces[7][3] = new Queen(BLACK);
-    pieces[7][4] = new King(BLACK);
-    pieces[7][5] = new Bishop(BLACK);
-    pieces[7][6] = new Magician(BLACK);
-    pieces[7][7] = new Champion(BLACK);
-
-    whiteTurn = true;
-    gameEnded = false;
-
-    whiteKingPos = "E1";
-    blackKingPos = "E8";
-
-    updatePiecesPositions();
-
-    updateAllValidMoves();
-
-    updateGameState();
-}
-#endif
 
 } // namespace chess

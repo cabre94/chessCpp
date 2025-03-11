@@ -34,15 +34,8 @@ public:
 protected:
     void clearBoard();
 
-    // void initializePieces();
-    // void initializePiecesButterfly();
-    // void initializePiecesPawnGame();
-    // void initializePiecesChampionMagician();
-
     bool validIdxs(uint32_t r, uint32_t c) const;
     bool validPos(const Position &pos) const;
-
-    Position idx2Pos(const uint32_t r, const uint32_t c) const;
 
     Piece *getPiece(uint32_t r, uint32_t c) {
         assert(validIdxs(r, c));
