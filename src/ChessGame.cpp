@@ -31,7 +31,7 @@ ChessGame::~ChessGame() {
 }
 
 void ChessGame::play() {
-    char c;
+    char c = 0;
 
     while (c != 'q') {
         board->printBoard();
