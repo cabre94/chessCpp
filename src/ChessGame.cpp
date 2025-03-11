@@ -20,10 +20,6 @@ ChessGame::ChessGame() {
     std::cout << "p: PawnChess -Normal board chess with Pawn Game distribution\n";
     std::cout << "c: PawnChess -Normal board chess with Champion and Magician pieces\n";
 
-    // char c;
-    // std::cin >> c;
-
-    // board = new ChessBoard();
     initializeGame();
 }
 
@@ -35,22 +31,6 @@ ChessGame::~ChessGame() {
 }
 
 void ChessGame::play() {
-
-    // while (!board->askWinner()) {
-    //     // system("clear");
-
-    //     // bool succesMove;
-
-    //     std::string from, to;
-
-    //     board->printPosAndPieces();
-    //     board->printBoard();
-
-    //     printCheckMessage();
-
-    //     // succesMove = board->makeMove(from, to);
-    // }
-
     char c;
 
     while (c != 'q') {
@@ -59,13 +39,6 @@ void ChessGame::play() {
         std::cin >> c;
     }
 }
-
-// void ChessGame::printCheckMessage() const {
-//     // if (board->isWhiteInCheck())
-//     //     std::cout << "White king is in check" << std::endl;
-//     // if (board->isBlackInCheck())
-//     //     std::cout << "Black king is in check" << std::endl;
-// }
 
 void ChessGame::initializeGame() {
     createPieces();
