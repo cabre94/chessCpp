@@ -40,6 +40,8 @@ public:
     virtual std::set<Position> getAllDirectionMoves(const Position &pos,
                                                     const PlayerID player_id) const = 0;
 
+    virtual Piece *getPiece(uint32_t r, uint32_t c) = 0;
+
     // virtual bool makeMove(Position from, Position to) = 0;
     // virtual void createPices(const char c = 'n') = 0;
 };
