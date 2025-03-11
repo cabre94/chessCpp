@@ -10,27 +10,6 @@
 #include "Pieces/Utils.h"
 #include "Positions/Position.h"
 
-class TestChessBoard : public chess::ChessBoard {
-public:
-    // void testInitializePieces() { initializePieces(); }
-    chess::Piece *getPiece(uint32_t r, uint32_t c) { return ChessBoard::getPiece(r, c); }
-};
-
-// #include "Champion.h"
-// #include "King.h"
-// #include "Knight.h"
-// #include "Magician.h"
-// #include "Pawn.h"
-// #include "Queen.h"
-// #include "Rook.h"
-
-// static std::string toLower(const std::string &str) {
-//     std::string lowerStr = str; // Copiar el string original
-//     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(),
-//                    [](unsigned char c) { return std::tolower(c); });
-//     return lowerStr;
-// }
-
 [[maybe_unused]] static void printSetPositions(const chess::Position &c_pos,
                                                const std::set<chess::Position> &positions) {
     std::cout << c_pos << " --> ";
