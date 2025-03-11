@@ -10,9 +10,10 @@ set(TEST_NAME test_chessCpp)
 
 add_executable(
 	${TEST_NAME}
+	test_ChessBoard.cpp
+	test_ChessGame.cpp
 	test_Pieces.cpp
 	test_Positions.cpp
-	test_ChessBoard.cpp
 	${SOURCES} # Sources of application
 )
 
