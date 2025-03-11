@@ -20,7 +20,7 @@ public:
 
     void play();
 
-private:
+protected:
     void initializeGame();
     void createPieces();
 
