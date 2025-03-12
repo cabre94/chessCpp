@@ -44,6 +44,17 @@ protected:
         assert(validIdxs(r, c));
         return pieces[r][c];
     }
+    Piece *getPiece(const Position &pos) {
+        if (!validPos(pos))
+            throw std::invalid_argument("Invalid position");
+        return pieces[pos[1]][pos[0]];
+    }
+    void setPiece(const Position &pos, Piece *piece) {
+        if (!validPos(pos))
+            throw std::invalid_argument("Invalid position");
+        assert(pieces[pos[1]][pos[0]] == nullptr);
+        pieces[pos[1]][pos[0]] = piece;
+    }
 
 private:
     Piece *pieces[N_ROW][N_COL];
