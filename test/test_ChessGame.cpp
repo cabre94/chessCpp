@@ -16,10 +16,10 @@ static const std::filesystem::path projectDir =
 
 class TestChessGame : public chess::ChessGame {
 public:
-    chess::Piece *getPiece(uint32_t r, uint32_t c) { return board->getPiece(r, c); }
+    chess::Piece *getPiece(const chess::Position &pos) { return board->getPiece(pos); }
 
-    std::set<chess::Position> getPossibleMoves(uint32_t r, uint32_t c) {
-        return getPiece(r, c)->getPossibleMoves(board);
+    std::set<chess::Position> getPossibleMoves(const chess::Position &pos) {
+        return getPiece(pos)->getPossibleMoves(board);
     }
 
     void printBoard() { board->printBoard(); }
@@ -41,14 +41,16 @@ TEST(ChessGame, initializeGame) {
             exp_player_id = chess::BLACK;
 
         for (uint32_t c = 0; c < chess::ChessBoard::N_COL; ++c) {
-            EXPECT_EQ(game.getPiece(r, c)->getPlayerID(), exp_player_id);
-            EXPECT_EQ(game.getPiece(r, c)->getPosition(), chess::Position(r, c));
-            EXPECT_EQ(game.getPossibleMoves(r, c), getExpMovesOnNewBoard(r, c));
+            chess::Position pos(r, c);
+
+            EXPECT_EQ(game.getPiece(pos)->getPlayerID(), exp_player_id);
+            EXPECT_EQ(game.getPiece(pos)->getPosition(), chess::Position(pos));
+            EXPECT_EQ(game.getPossibleMoves(pos), getExpMovesOnNewBoard(r, c));
 
             if (r == 0 || r == 7) {
-                EXPECT_EQ(game.getPiece(r, c)->getName(), exp_names[c]);
+                EXPECT_EQ(game.getPiece(pos)->getName(), exp_names[c]);
             } else { // row of pawns
-                EXPECT_EQ(game.getPiece(r, c)->getName(), chess::PAWN_NAME);
+                EXPECT_EQ(game.getPiece(pos)->getName(), chess::PAWN_NAME);
             }
         }
     }
