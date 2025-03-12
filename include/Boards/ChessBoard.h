@@ -52,7 +52,7 @@ protected:
     void setPiece(const Position &pos, Piece *piece) {
         if (!validPos(pos))
             throw std::invalid_argument("Invalid position");
-        assert(pieces[pos[1]][pos[0]] == nullptr);
+        // assert(pieces[pos[1]][pos[0]] == nullptr);
         pieces[pos[1]][pos[0]] = piece;
     }
 
