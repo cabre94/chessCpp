@@ -97,7 +97,8 @@ void ChessGame::findFreePiece(Piece *piece) {
     // Try to remove from w_pieces or b_pieces
     bool found = removeFromVector(w_pieces, piece) || removeFromVector(b_pieces, piece);
 
-    assert(found && "Error: piece not found in any of the vectors.");
+    if (!found)
+        throw std::runtime_error("Error: piece not found in any of the vectors.");
 
     delete piece;
 }
