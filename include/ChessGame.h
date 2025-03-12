@@ -32,8 +32,10 @@ protected:
 
     Board *board;
 
-    std::vector<Piece *> w_pieces;
-    std::vector<Piece *> b_pieces;
+    // std::vector<Piece *> w_pieces;
+    // std::vector<Piece *> b_pieces;
+
+    std::vector<Piece *> p_pieces[MAX_NUM_PLAYERS];
 };
 
 } // namespace chess
