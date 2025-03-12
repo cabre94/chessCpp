@@ -40,10 +40,6 @@ protected:
     bool validIdxs(uint32_t r, uint32_t c) const { return r < N_ROW && c < N_COL; }
     bool validPos(const Position &pos) const { return validIdxs(pos[1], pos[0]); }
 
-    Piece *getPiece(uint32_t r, uint32_t c) override {
-        assert(validIdxs(r, c));
-        return pieces[r][c];
-    }
     Piece *getPiece(const Position &pos) override {
         if (!validPos(pos))
             throw std::invalid_argument("Invalid position");
