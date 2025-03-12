@@ -23,8 +23,9 @@ public:
     Board &operator=(Board &&) = default;      // Move assignment
 
     virtual void printBoard() const = 0;
+    virtual void placePieces(const std::vector<Piece *> &v_pieces) = 0;
 
-    // Aca deberian poner los metodos que dan las posiciones validas
+    // TODO: move this to private?
     virtual std::set<Position> getDiagonalMoves(const Position &pos,
                                                 const PlayerID player_id) const = 0;
     virtual std::set<Position> getParallelMoves(const Position &pos,
@@ -39,8 +40,9 @@ public:
     virtual std::set<Position> getAllDirectionMoves(const Position &pos,
                                                     const PlayerID player_id) const = 0;
 
+    virtual Piece *getPiece(uint32_t r, uint32_t c) = 0;
+
     // virtual bool makeMove(Position from, Position to) = 0;
-    // virtual void createPices(const char c = 'n') = 0;
 };
 
 } // namespace chess

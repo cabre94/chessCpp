@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <vector>
 
 #include "Boards/Board.h"
 #include "Pieces/Piece.h"
@@ -19,10 +20,16 @@ public:
 
     void play();
 
-private:
-    Board *boardPtr;
+protected:
+    void initializeGame();
+    void createPieces();
 
-    void printCheckMessage() const;
+    void freePieces(std::vector<Piece *> &pieces);
+
+    Board *board;
+
+    std::vector<Piece *> w_pieces;
+    std::vector<Piece *> b_pieces;
 };
 
 } // namespace chess
