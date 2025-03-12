@@ -14,7 +14,7 @@ namespace chess {
 
 class Board {
 public:
-    Board();
+    Board() {};
     virtual ~Board() {}
 
     Board(const Board &) = default;            // Copy constructor
