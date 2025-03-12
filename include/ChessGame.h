@@ -19,6 +19,7 @@ public:
     ChessGame &operator=(ChessGame &&) = default;      // Move assignment
 
     void play();
+    void makeMove(const Position &from, const Position &to);
 
 protected:
     void initializeGame();

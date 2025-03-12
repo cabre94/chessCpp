@@ -43,6 +43,14 @@ void ChessGame::play() {
     }
 }
 
+void ChessGame::makeMove(const Position &from, const Position &to) {
+
+    Piece *piece = board->makeMove(from, to);
+
+    if (piece != nullptr)
+        findFreePiece(piece);
+}
+
 void ChessGame::initializeGame() {
     createPieces();
 
