@@ -37,6 +37,21 @@ void ChessGame::play() {
     char c = 0;
 
     while (c != 'q') {
+        // Print available pieces for current player
+
+        // Ask player to choose a piece from options (consider potencial check)
+
+        // Print available moves for selected piece
+
+        // Ask player to choose a move from available moves
+
+        // Check if selected move doesnt make self king check
+
+        // make move
+
+        // Check for check and checkmates
+
+        //
         board->printBoard();
 
         std::cin >> c;
