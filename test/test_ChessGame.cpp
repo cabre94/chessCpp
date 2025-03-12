@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <cstdint>
+#include <filesystem>
+#include <fstream>
 #include <string>
 
 #include "Boards/Board.h"
@@ -8,6 +10,9 @@
 #include "ChessGame.h"
 #include "Pieces/Utils.h"
 #include "Positions/Position.h"
+
+static const std::filesystem::path projectDir =
+    std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path();
 
 class TestChessGame : public chess::ChessGame {
 public:
@@ -49,10 +54,28 @@ TEST(ChessGame, initializeGame) {
     }
 }
 
-TEST(ChessGame, printBoard) {
+TEST(ChessGame, makeMove) {
     TestChessGame game;
 
+    std::cout << "Initial board:" << std::endl;
     game.printBoard();
+
+    // Get file with moves
+    static const std::string movesFilePath = (projectDir / "data" / "moves.txt").lexically_normal();
+    std::ifstream movesFile(movesFilePath);
+    ASSERT_TRUE(movesFile.is_open()) << "Cannot open moves.txt";
+
+    std::string fromStr, toStr;
+    while (movesFile >> fromStr >> toStr) {
+        chess::Position from(fromStr), to(toStr); // Create positions
+
+        std::cout << "Move from" << fromStr << " to " << toStr << std::endl;
+
+        game.makeMove(from, to);
+        game.printBoard();
+    }
+
+    movesFile.close();
 }
 
 //

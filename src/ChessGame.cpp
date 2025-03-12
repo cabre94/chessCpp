@@ -1,4 +1,5 @@
-#include "ChessGame.h"
+#include <algorithm>
+
 #include "Boards/Board.h"
 #include "Boards/ChessBoard.h"
 #include "Pieces/Bishop.h"
@@ -10,6 +11,8 @@
 #include "Pieces/Queen.h"
 #include "Pieces/Rook.h"
 #include "Positions/Position.h"
+
+#include "ChessGame.h"
 
 namespace chess {
 
@@ -38,6 +41,14 @@ void ChessGame::play() {
 
         std::cin >> c;
     }
+}
+
+void ChessGame::makeMove(const Position &from, const Position &to) {
+
+    Piece *piece = board->makeMove(from, to);
+
+    if (piece != nullptr)
+        findFreePiece(piece);
 }
 
 void ChessGame::initializeGame() {
@@ -80,6 +91,26 @@ void ChessGame::freePieces(std::vector<Piece *> &pieces) {
     for (Piece *p : pieces)
         delete p;
     pieces.clear();
+}
+
+void ChessGame::findFreePiece(Piece *piece) {
+    // Try to remove from w_pieces or b_pieces
+    bool found = removeFromVector(w_pieces, piece) || removeFromVector(b_pieces, piece);
+
+    if (!found)
+        throw std::runtime_error("Error: piece not found in any of the vectors.");
+
+    delete piece;
+}
+
+bool ChessGame::removeFromVector(std::vector<Piece *> &pieces, Piece *target) {
+    auto it = std::find(pieces.begin(), pieces.end(), target);
+    if (it != pieces.end()) {
+        std::iter_swap(it, pieces.end() - 1);
+        pieces.pop_back();
+        return true;
+    }
+    return false;
 }
 
 } // namespace chess

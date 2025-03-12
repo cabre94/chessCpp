@@ -19,12 +19,16 @@ public:
     ChessGame &operator=(ChessGame &&) = default;      // Move assignment
 
     void play();
+    void makeMove(const Position &from, const Position &to);
 
 protected:
     void initializeGame();
     void createPieces();
 
     void freePieces(std::vector<Piece *> &pieces);
+    void findFreePiece(Piece *piece);
+
+    bool removeFromVector(std::vector<Piece *> &pieces, Piece *target);
 
     Board *board;
 

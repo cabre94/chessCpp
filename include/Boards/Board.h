@@ -14,7 +14,7 @@ namespace chess {
 
 class Board {
 public:
-    Board();
+    Board() {};
     virtual ~Board() {}
 
     Board(const Board &) = default;            // Copy constructor
@@ -24,6 +24,8 @@ public:
 
     virtual void printBoard() const = 0;
     virtual void placePieces(const std::vector<Piece *> &v_pieces) = 0;
+
+    Piece *makeMove(const Position &from, const Position &to);
 
     // TODO: move this to private?
     virtual std::set<Position> getDiagonalMoves(const Position &pos,
@@ -40,9 +42,9 @@ public:
     virtual std::set<Position> getAllDirectionMoves(const Position &pos,
                                                     const PlayerID player_id) const = 0;
 
-    virtual Piece *getPiece(uint32_t r, uint32_t c) = 0;
-
-    // virtual bool makeMove(Position from, Position to) = 0;
+    virtual Piece *getPiece(uint32_t r, uint32_t c) = 0; // may remove this
+    virtual Piece *getPiece(const Position &pos) = 0;
+    virtual void setPiece(const Position &pos, Piece *piece) = 0;
 };
 
 } // namespace chess
