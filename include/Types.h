@@ -21,6 +21,6 @@ namespace chess {
 // constexpr PlayerID BLACK = 1;
 
 // Enum para PlayerID
-enum PlayerID : uint32_t { WHITE = 0, BLACK = 1 };
+enum PlayerID : uint32_t { WHITE = 0, BLACK = 1, MAX_NUM_PLAYERS };
 
 } // namespace chess
