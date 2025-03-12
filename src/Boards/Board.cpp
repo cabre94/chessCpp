@@ -2,18 +2,15 @@
 
 namespace chess {
 
-Board::Board() {
-    // gameEnded = false;
-    // whiteInCheck = false;
-    // blackInCheck = false;
+Piece *Board::makeMove(const Position &from, const Position &to) {
+
+    Piece *p_from = getPiece(from); // Get piece in "from" position
+    Piece *p_to = getPiece(to);     // Get piece in "to" position
+
+    setPiece(to, p_from);    // Set piece in "from" position to "to" position
+    setPiece(from, nullptr); // Set nullptr in "from" Position
+
+    return p_to; // Return piece originally in "to" position
 }
-
-// bool Board::stringInSet(const std::set<std::string> &set, const std::string &str) const {
-//     return bool(set.count(str));
-// }
-
-// void Board::addPlayerPieces(std::vector<Piece *> &player_pieces) {
-//     all_pieces.push_back(&player_pieces);
-// }
 
 } // namespace chess
