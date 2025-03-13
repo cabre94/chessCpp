@@ -19,6 +19,7 @@ public:
     PlayerID getPlayerID() const { return player_id; }
 
 protected:
+    virtual Position askPosition() const = 0;
     const PlayerID player_id;
 
     // std::vector<Piece *> pieces;
