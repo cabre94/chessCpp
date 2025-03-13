@@ -2,6 +2,13 @@
 
 namespace chess {
 
-void RealPlayer::dummy() const {}
+Position RealPlayer::askPosition() const {
+    std::string input;
+
+    std::cout << "Select position: \n";
+    std::cin >> input;
+
+    return Position(input);
+}
 
 } // namespace chess

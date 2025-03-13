@@ -9,7 +9,7 @@ public:
     RealPlayer(PlayerID player_id_) : Player(player_id_) {}
     ~RealPlayer() {}
 
-    void dummy() const override;
+    Position askPosition() const override;
 };
 
 } // namespace chess
