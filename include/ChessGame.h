@@ -40,6 +40,7 @@ protected:
 
 private:
     void printPosOfPieces(const std::vector<Piece *> &pieces);
+    void printMoves(const std::set<Position> &moves);
 
     Player *players[MAX_NUM_PLAYERS] = {0};
     uint32_t NUM_PLAYERS = MAX_NUM_PLAYERS;

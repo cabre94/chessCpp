@@ -160,4 +160,10 @@ void ChessGame::printPosOfPieces(const std::vector<Piece *> &pieces) {
     std::cout << std::endl;
 }
 
+void ChessGame::printMoves(const std::set<Position> &moves) {
+    for (const auto &m : moves)
+        std::cout << m << ' ';
+    std::cout << std::endl;
+}
+
 } // namespace chess
