@@ -231,8 +231,7 @@ static std::set<chess::Position> expectedLShapeEmptyBoard(uint32_t r, uint32_t c
     std::set<chess::Position> exp_set;
 
     if (deltas.size() != 2) {
-        throw std::invalid_argument(
-            "expectedLShapeEmptyBoard requiere exactamente dos valores en deltas.");
+        throw std::invalid_argument("expectedLShapeEmptyBoard deltas size != 2");
     }
 
     int32_t dr = static_cast<int32_t>(deltas[0]);
@@ -260,8 +259,7 @@ expectedForwardMovesEmptyBoard(uint32_t r, uint32_t c, const std::vector<int16_t
     std::set<chess::Position> exp_set;
 
     if (forward_dir.size() != 2) {
-        throw std::invalid_argument(
-            "expectedForwardMovesEmptyBoard requiere exactamente dos valores en forward_dir.");
+        throw std::invalid_argument("expectedForwardMovesEmptyBoard - forward_dir size != 2");
     }
 
     int32_t dr = static_cast<int32_t>(forward_dir[0]);

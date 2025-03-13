@@ -16,7 +16,7 @@ public:
 
     virtual Position askPosition() const = 0;
 
-    Position selectPiece(const std::vector<Piece *> pieces);
+    Piece *selectPiece(const std::vector<Piece *> pieces);
 
     PlayerID getPlayerID() const { return player_id; }
 

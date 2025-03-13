@@ -163,7 +163,7 @@ std::set<Position> ChessBoard::getDiagonalMoves(const Position &pos,
 std::set<chess::Position> ChessBoard::getLShapeMoves(const Position &pos, const PlayerID player_id,
                                                      const std::vector<uint16_t> &deltas) const {
     if (deltas.size() != 2) {
-        throw std::invalid_argument("getLShapeMoves requiere exactamente dos valores en deltas.");
+        throw std::invalid_argument("ChessBoard::getLShapeMoves deltas size != 2");
     }
 
     std::set<chess::Position> moves;
@@ -204,7 +204,7 @@ std::set<Position> ChessBoard::getFordwardMoves(const Position &pos, const Playe
     std::set<chess::Position> moves;
 
     if (forward_dir.size() != 2)
-        throw std::invalid_argument("getForwardMoves forward_dir size != 2");
+        throw std::invalid_argument("ChessBoard::getForwardMoves forward_dir size != 2");
 
     int32_t dr = static_cast<int32_t>(forward_dir[0]);
     int32_t dc = static_cast<int32_t>(forward_dir[1]);
@@ -304,7 +304,7 @@ void ChessBoard::placePieces(const std::vector<Piece *> &v_pieces) {
         c = pos[0];
 
         if (pieces[r][c] != nullptr)
-            throw std::invalid_argument("position already has a piece");
+            throw std::invalid_argument("ChessBoard::placePieces - position already has a piece");
 
         pieces[r][c] = p;
     }

@@ -5,6 +5,7 @@
 
 #include "Boards/Board.h"
 #include "Pieces/Piece.h"
+#include "Players/Player.h"
 
 namespace chess {
 
@@ -40,6 +41,7 @@ protected:
 private:
     void printPosOfPieces(const std::vector<Piece *> &pieces);
 
+    Player *players[MAX_NUM_PLAYERS] = {0};
     uint32_t NUM_PLAYERS = MAX_NUM_PLAYERS;
 };
 

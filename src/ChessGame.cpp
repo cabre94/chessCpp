@@ -10,6 +10,7 @@
 #include "Pieces/Pawn.h"
 #include "Pieces/Queen.h"
 #include "Pieces/Rook.h"
+#include "Players/RealPlayer.h"
 #include "Positions/Position.h"
 
 #include "ChessGame.h"
@@ -44,6 +45,7 @@ void ChessGame::play() {
         printPosOfPieces(p_pieces[turn]);
 
         // Ask player to choose a piece from options (consider potencial check)
+        Position pos = players[turn]->askPosition();
 
         // Print available moves for selected piece
 
@@ -74,6 +76,11 @@ void ChessGame::makeMove(const Position &from, const Position &to) {
 }
 
 void ChessGame::initializeGame() {
+
+    for (size_t p_idx = 0; p_idx < MAX_NUM_PLAYERS; ++p_idx) {
+        players[p_idx] = new RealPlayer(PlayerID(p_idx));
+    }
+
     createPieces();
 
     board = new ChessBoard();
@@ -131,7 +138,8 @@ void ChessGame::findFreePiece(Piece *piece) {
         found |= removeFromVector(p, piece);
 
     if (!found)
-        throw std::runtime_error("Error: piece not found in any of the vectors.");
+        throw std::runtime_error(
+            "ChessGame::findFreePiece - piece not found in any of the vectors.");
 
     delete piece;
 }
