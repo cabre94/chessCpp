@@ -38,8 +38,10 @@ ChessGame::~ChessGame() {
 void ChessGame::play() {
     char c = 0;
 
+    uint32_t turn = WHITE;
     while (c != 'q') {
         // Print available pieces for current player
+        printPosOfPieces(p_pieces[turn]);
 
         // Ask player to choose a piece from options (consider potencial check)
 
@@ -142,6 +144,12 @@ bool ChessGame::removeFromVector(std::vector<Piece *> &pieces, Piece *target) {
         return true;
     }
     return false;
+}
+
+void ChessGame::printPosOfPieces(const std::vector<Piece *> &pieces) {
+    for (const auto &p : pieces)
+        std::cout << p->getPosition() << ' ';
+    std::cout << std::endl;
 }
 
 } // namespace chess
