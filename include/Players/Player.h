@@ -15,6 +15,7 @@ public:
     // std::vector<Piece *> &getPieces() { return pieces; }
 
     Piece *selectPiece(const std::vector<Piece *> pieces);
+    Position selectMove(const std::set<Position> &moves);
 
     PlayerID getPlayerID() const { return player_id; }
 

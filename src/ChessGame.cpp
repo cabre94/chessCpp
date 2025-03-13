@@ -51,6 +51,7 @@ void ChessGame::play() {
         std::set<Position> avail_moves = piece->getPossibleMoves(board);
 
         // Ask player to choose a move from available moves
+        printMoves(avail_moves);
 
         // Check if selected move doesnt make self king check
 
