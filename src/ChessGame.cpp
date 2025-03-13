@@ -48,6 +48,7 @@ void ChessGame::play() {
         Piece *piece = players[turn]->selectPiece(p_pieces[turn]);
 
         // Print available moves for selected piece
+        std::set<Position> avail_moves = piece->getPossibleMoves(board);
 
         // Ask player to choose a move from available moves
 
