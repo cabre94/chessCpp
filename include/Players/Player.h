@@ -14,8 +14,6 @@ public:
 
     // std::vector<Piece *> &getPieces() { return pieces; }
 
-    virtual Position askPosition() const = 0;
-
     Piece *selectPiece(const std::vector<Piece *> pieces);
 
     PlayerID getPlayerID() const { return player_id; }
