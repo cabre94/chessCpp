@@ -45,7 +45,7 @@ void ChessGame::play() {
         printPosOfPieces(p_pieces[turn]);
 
         // Ask player to choose a piece from options (consider potencial check)
-        Position pos = players[turn]->askPosition();
+        Piece *piece = players[turn]->selectPiece(p_pieces[turn]);
 
         // Print available moves for selected piece
 
