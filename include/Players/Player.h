@@ -10,7 +10,7 @@ namespace chess {
 class Player {
 public:
     Player(PlayerID player_id_) : player_id(player_id_) {}
-    virtual ~Player();
+    virtual ~Player() {};
 
     // std::vector<Piece *> &getPieces() { return pieces; }
 
