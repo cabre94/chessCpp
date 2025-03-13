@@ -56,6 +56,9 @@ void ChessGame::play() {
         //
         board->printBoard();
 
+        // Update turn
+        turn = (turn + 1) % NUM_PLAYERS;
+
         std::cin >> c;
     }
 }
