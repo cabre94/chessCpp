@@ -41,6 +41,8 @@ void ChessGame::play() {
 
     uint32_t turn = WHITE;
     while (c != 'q') {
+        board->printBoard();
+
         // Print available pieces for current player
         printPosOfPieces(p_pieces[turn]);
 
@@ -50,22 +52,22 @@ void ChessGame::play() {
         // Print available moves for selected piece
         std::set<Position> avail_moves = piece->getPossibleMoves(board);
 
-        // Ask player to choose a move from available moves
         printMoves(avail_moves);
+
+        // Ask player to choose a move from available moves
+        Position to = players[turn]->selectMove(avail_moves);
 
         // Check if selected move doesnt make self king check
 
         // make move
+        makeMove(piece->getPosition(), to);
 
         // Check for check and checkmates
-
-        //
-        board->printBoard();
 
         // Update turn
         turn = (turn + 1) % NUM_PLAYERS;
 
-        std::cin >> c;
+        // std::cin >> c;
     }
 }
 
