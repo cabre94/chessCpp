@@ -1,10 +1,14 @@
+#include <cassert>
+
 #include "Players/Player.h"
 
 namespace chess {
 
 Piece *Player::selectPiece(const std::vector<Piece *> pieces) {
+    assert(!pieces.empty()); // TODO: add msg
+
     while (true) {
-        Position pos = askPosition(); // Ask the user for a position.
+        Position pos = askPosition();
 
         // Iterate through the vector to see if any piece has that position.
         for (Piece *piece : pieces) {
@@ -21,8 +25,7 @@ Position Player::selectMove(const std::set<Position> &moves) {
         throw std::runtime_error("Player::selectMove - No available moves");
 
     while (true) {
-        // Ask the user for a position.
-        Position pos = askPosition(); // Assumes askPosition() returns a Position.
+        Position pos = askPosition();
 
         for (const Position &move : moves) { // Search for the position in the set.
             if (move == pos)
