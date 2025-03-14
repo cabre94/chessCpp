@@ -80,6 +80,31 @@ TEST(ChessGame, makeMove) {
     movesFile.close();
 }
 
+TEST(ChessGame, Kasparov_immortal) {
+    TestChessGame game;
+
+    std::cout << "Initial board:" << std::endl;
+    game.printBoard();
+
+    // Get file with moves
+    static const std::string movesFilePath =
+        (projectDir / "data" / "Kasparov's_immortal.txt").lexically_normal();
+    std::ifstream movesFile(movesFilePath);
+    ASSERT_TRUE(movesFile.is_open()) << "Cannot open moves.txt";
+
+    std::string fromStr, toStr;
+    while (movesFile >> fromStr >> toStr) {
+        chess::Position from(fromStr), to(toStr); // Create positions
+
+        std::cout << "Move from" << fromStr << " to " << toStr << std::endl;
+
+        game.makeMove(from, to);
+        game.printBoard();
+    }
+
+    movesFile.close();
+}
+
 //
 static std::set<chess::Position> getExpMovesOnNewBoard(uint32_t r, uint32_t c) {
     std::set<chess::Position> moves;

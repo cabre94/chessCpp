@@ -31,6 +31,8 @@ public:
     std::string getName() const { return name; };
     Position getPosition() const { return pos; }
 
+    void setPosition(const Position &pos_) { pos = pos_; }
+
     virtual std::set<Position> getPossibleMoves(const Board *board) = 0;
 
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece) {

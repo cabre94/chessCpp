@@ -5,6 +5,7 @@
 
 #include "Boards/Board.h"
 #include "Pieces/Piece.h"
+#include "Players/Player.h"
 
 namespace chess {
 
@@ -32,8 +33,17 @@ protected:
 
     Board *board;
 
-    std::vector<Piece *> w_pieces;
-    std::vector<Piece *> b_pieces;
+    // std::vector<Piece *> w_pieces;
+    // std::vector<Piece *> b_pieces;
+
+    std::vector<Piece *> p_pieces[MAX_NUM_PLAYERS];
+
+private:
+    void printPosOfPieces(const std::vector<Piece *> &pieces);
+    void printMoves(const std::set<Position> &moves);
+
+    Player *players[MAX_NUM_PLAYERS] = {0};
+    uint32_t NUM_PLAYERS = MAX_NUM_PLAYERS;
 };
 
 } // namespace chess

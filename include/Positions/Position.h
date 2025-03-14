@@ -17,14 +17,14 @@ public:
     explicit Position(std::string pos_) {
         // Normalizar a minúsculas
         if (pos_.size() != 2) {
-            throw std::invalid_argument("Invalid chess position: " + pos);
+            throw std::invalid_argument("Position::Position - Invalid chess position: " + pos);
         }
 
         pos_[0] = (char) std::tolower(pos_[0]); // Normalizar columna a minúscula
         pos_[1] = (char) std::tolower(pos_[1]); // Aunque los números no cambian, es seguro hacerlo
 
         if (!formatAndCheckValid(pos_)) {
-            throw std::invalid_argument("Invalid chess position: " + pos);
+            throw std::invalid_argument("Position::Position - Invalid chess position: " + pos);
         }
 
         idx = {(uint32_t) pos_[0] - 'a', (uint32_t) pos_[1] - '1'};
@@ -37,8 +37,6 @@ public:
     // Constructor a partir de índices de fila y columna
     Position(uint32_t row, uint32_t col) {
         // Assume that indexes are already checked
-        // if (row > 7 || col > 7)
-        //     throw std::out_of_range("Invalid indices for chess position");
 
         idx = {col, row};
         pos.resize(2);
