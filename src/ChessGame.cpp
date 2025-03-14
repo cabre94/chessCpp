@@ -34,6 +34,10 @@ ChessGame::~ChessGame() {
         freePieces(p);
 
     delete board;
+
+    for (size_t p_idx = 0; p_idx < MAX_NUM_PLAYERS; ++p_idx) {
+        delete players[p_idx];
+    }
 }
 
 void ChessGame::play() {
