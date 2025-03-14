@@ -17,6 +17,9 @@ Piece *Player::selectPiece(const std::vector<Piece *> pieces) {
 }
 
 Position Player::selectMove(const std::set<Position> &moves) {
+    if (moves.empty())
+        throw std::runtime_error("Player::selectMove - No available moves");
+
     while (true) {
         // Ask the user for a position.
         Position pos = askPosition(); // Assumes askPosition() returns a Position.
