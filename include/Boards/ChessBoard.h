@@ -49,7 +49,9 @@ protected:
         if (!validPos(pos))
             throw std::invalid_argument("ChessBoard::setPiece - Invalid position");
         // assert(pieces[pos[1]][pos[0]] == nullptr);
-        pieces[pos[1]][pos[0]] = piece;
+
+        piece->setPosition(pos);        // Update pos field on piece
+        pieces[pos[1]][pos[0]] = piece; // Update pos on board representation
     }
 
 private:
